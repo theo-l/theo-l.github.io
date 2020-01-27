@@ -1,0 +1,787 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Hacking python class| by theol.liang@gmail.com</title>
+    
+    <meta name="description" content="Hacking python class presentations in Markdown" />
+    <meta name="author" content="Liang Guisheng" />
+    <link rel="stylesheet" href="js/extras/highlight/styles/github.css">
+
+        
+    <!--
+        Styles specific for this example presentation. 
+    -->
+    <link href="css/class_markdown-slides.css" rel="stylesheet" />
+    <link href="css/class_devopsy.css" rel="stylesheet" />
+    <link href="css/class_effects.css" rel="stylesheet" />
+    <link href="css/class_custome.css" rel="stylesheet" />
+
+</head>
+
+<body class="impress-not-supported">
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="impress" data-transition-duration="1000">
+
+<div class="step slide markdown" data-rel-x="0" data-rel-y="900">
+
+# Hacking python Class
+
+Liang Guisheng
+
+theol.liang@gmail.com
+
+-----
+
+# 1. Brief case
+## Work without class 
+
+* Image how can we create a system to manage all Truckpaders without use class?
+
+  * Every Truckpader has state informations including: *name*, *position* 
+  * Every Truckpader has actions including: *work()*
+  * The whole number of employees
+  * Implement some features with a group of truckpaders: **to_task(\*truckpaders)**
+
+-----
+
+# 2. TPHRS
+## Truckpader Human Resource System
+
+        EMPLOYEE_COUNT = 0
+        def build_truckpader(name, position):
+            global EMPLOYEE_COUNT
+            EMPLOYEE_COUNT += 1
+            return {'name':name, 'posstion':position}
+
+        def work(truckpader): # make client easy to use with truckpader usage  
+            position = truckpader.get('position')
+            if position == 'android':
+                print(f'{truckpader["name"]} is doing some KJ')
+            elif position == 'frontend': 
+                print(f'{truckpader["name"]} is doing some HCJ')
+            elif position == 'backend':
+                print(f'{truckpader["name"]} is doing some PR')
+            else:
+                print(f'Unkown truckpader position')
+        
+        def do_task(*truckpaders):
+            for truckpader in truckpaders:
+                work(truckpader)
+        
+
+-----
+# 3. How TPHRs Works?
+
+        if __name__ == '__main__':
+            # create an data struct object *actually is a instance of dict*
+            liang = build_truckpader('liang', 'backend')
+            parazinho = build_truckpader('parazinho', 'android')
+            paulinha = build_truckpader('paulinha', 'frontend')
+
+            work(liang) #>>> 'liang is doing some PR'
+            work(parazinho) #>>> 'parazinho is doing some KJ'
+            work(paulinha) #>>> 'paulinha is doing some HCJ'
+
+            do_task(*[liang, parazinho, paulinha]) # finish task together
+
+-----
+# 4. Challenges
+## Now Truckad is growing up, and our system need more features
+
+## what we can do to make our TPHRS support this? 
+
+
+-----
+# 5. Extends **work** function 
+## Now we have **po**, **infra**, **bi**
+
+        def work(truckpader): # make client easy to use with truckpader usage  
+            position = getattr(truckpader, 'position')
+            if position == 'android':
+                print(f'{truckpader["name"]} is doing some KJ')
+            elif position == 'frontend': 
+                print(f'{truckpader["name"]} is doing some HCJ')
+            elif position == 'backend':
+                print(f'{truckpader["name"]} is doing some PR')
+            elif position == 'po':
+                print(f'{truckpader["name"]} is doing plaining')
+            elif position == 'infra':
+                print(f'{truckpader["name"]} is doing maintenance')
+            elif position == 'bi':
+                print(f'{truckpader["name"]} is doing statistics')
+            else:
+                print(f'Unkown truckpader profssion')
+
+-----
+# 6. Extended system works
+
+        if __name__ == '__main__':
+            # create an data struct object *actually is a instance of dict*
+            liang = build_truckpader('liang','backend')
+            parazinho = build_truckpader('parazinho','android')
+            paulinha = build_truckpader('paulinha','frontend')
+            ale = build_truckpader('ale','po')
+            victor = build_truckpader('victor','infra')
+            gabriel = build_truckpader('gabriel','bi')
+
+            work(liang) #>>> 'liang is doing some PR'
+            work(parazinho) #>>> 'parazinho is doing some KJ'
+            work(paulinha) #>>> 'paulinha is doing some HCJ'
+            work(ale)
+            work(victor)
+            work(gabriel)
+
+            do_task(*[liang, paraziho, paulinha, ale, victor, gabriel]) # finish task together
+-----
+
+# 7. **TPHRS** with OOP/Class
+
+Use class to represent system object
+
+        class Employee:
+            def __init__(self, name, position):
+                self.name = name 
+                self.position = position
+            def work(self):
+                pass
+        class Backend(Employee):
+            def __init__(self, name):
+                super().__init__(name, 'backend')
+            def work(self):
+                print(f'{self.name} is doing PR')
+        class Android(Employee):
+            def __init__(self,name):
+                super().__init__(name, 'frontend')
+            def work(self):
+                print(f'{self.name} is doing KJ')
+        class Frontend(Employee):
+            def __init__(self,name):
+                super().__init__(name, 'frontend')
+            def work(self):
+                print(f'{self.name} is doing HCJ')
+
+-----
+
+# 8. TPHRS Work with class
+
+Apply system objects to finish some tasks
+
+        class Service:
+            def work(self, employees:List[Employee]=None):
+                employees = employees or []
+                for employee in employees:
+                    employee.work()
+
+        if __name__ == '__main__':
+            liang = Backend('liang')
+            parazinho = Android('parazinho')
+            paulinha = Frontend('paulinha')
+
+            liang.work()
+            parazinho.work()
+            paulinha.work()
+
+            review = Service()
+            review.work([liang, parazinho, paulinha])
+
+-----
+
+# 9. Function VS Class
+
+* Inheritance
+* Easy extend
+* Reuse code
+* More intuitive
+
+-----
+
+# 10. Review class 
+
+    # 1. Parent class: object
+    class Employee(object):
+    # 2. Class name: Employee
+
+        # 3. Class attributes
+        name = None
+        position = None
+
+        # 4. builtin methods
+        def __init__(self, name,  position):
+
+            # 5. instance attributes
+            self.name = name 
+            self.position = position
+
+        # 6. user defined methods
+        def work(self):
+            pass
+
+
+-----
+# 11. Attribute Overview
+
+    class DescriptorAttr:
+        def __init__(self, value=None):
+            self._value = value
+
+        def __get__(self, instance, klass):
+            return self._value
+
+        def __set__(self, instance, value):
+            self._value = value
+
+    class Employee(object):
+        public_attr = 'public value'
+        _fake_private_attr = 'fake private value'
+        __private_attr = 'not really private value'
+        descriptor_attr = DescriptorAttr('descriptor value')
+
+        def __init__(self, name=None):
+            self.name = name
+
+    if __name__ == '__main__':
+        alice = Employee('alice')
+        print(alice.name)
+        print(alice.public_attr)
+        print(alice._fake_private_attr)
+        print(alice.descriptor_attr)
+        print(alice.__private_attr) # cause error
+
+-----
+
+# 12. Instance attribute 
+
+        class Employee:
+            def __init__(self, name):
+                self.name = name # initiate instance's attribute
+
+            def __getattribute__(self, item):
+                print(f'--------Access instance attribute: <{item}> in Employee.__getattribute__!\n')
+                return super(Employee, self).__getattribute__(item)
+
+            def __getattr__(self, item): # mock 'age' as non initiated instance attribute
+                print(f'--------Access instance attribute: {item} in Employee.__getattr__!\n')
+                return 25 if item == 'age' else super(Employee, self).__getattr__(item)
+
+            def __setattr__(self, key, value):
+                print(f'--------Set instance attribute: <{key}>=<{value}> in Employee.__setattr__!\n')
+                super(Employee, self).__setattr__(key, value)
+
+        if __name__ == '__main__':
+            alice = Employee('alice')  
+            print(alice.name) # access defined instance attribute
+            print(alice.age) # access non-defined instance attribute
+            print(alice.hello()) # demo access non-defined method
+
+-----
+# 13. Class attribute 
+
+        class Meta(type):
+            def __getattribute__(self, item):
+                print(f'>>>>>>>>Access class attribute: {item} in Meta.__getattribute__!\n')
+                return super(Meta, self).__getattribute__(item)
+
+            def __getattr__(self, item): # mock 'age' as non initiated class attribute 
+                print(f'>>>>>>>>Access class attribute: {item} in Meta.__getattr__!\n')
+                return 25 if item == 'age' else super(Meta, self).__getattr__(item)
+                
+            def __setattr__(self, key, value):
+                print(f'>>>>>>>>Set class attribute: <{key}> = <{value}> in Meta.__setattr__!\n')
+                super(Meta, self).__setattr__(key, value)
+
+
+        class Employee(metaclass = Meta):
+            count = 0
+            def __init__(self, name):
+                self.name = name
+                Employee.count+=1
+
+        if __name__ == '__main__':
+            alice = Employee('alice')  
+            print(Employee.count) # access defined class attribute 
+            print(Employee.age) # access non-defined class attribute
+-----
+
+# 14. Descriptor attribute
+
+        class DescriptorAttr:
+            def __init__(self, value=None):
+                print(f'--------Init attribute value:<{value}> in DescriptorAttr.__init__')
+                self._value = value
+        
+            def __get__(self, instance, klass):
+                print(f'--------Before access attribute value:<{self._value}> in DescriptorAttr.__get__')
+                result = self._value
+                print(f'--------After access attribute value:<{self._value}> in DescriptorAttr.__get__')
+                return result
+        
+            def __set__(self, instance, value):
+                print(f'--------Before set attribute value:<{value}> in DescriptorAttr.__set__')
+                self._value = value
+                print(f'--------After set attribute value:<{value}> in DescriptorAttr.__set__')
+        
+        class Employee:
+            name = DescriptorAttr('truckpader')
+        
+        if __name__ == "__main__":
+            truckpader = Employee()
+            truckpader.name = 'alice'
+            print(truckpader.name)
+-----
+# 15. Method Overview
+
+    class Employee:
+        count = 0
+        def __init__(self, name):
+            self.name = name
+            Employee.count += 1
+        @classmethod
+        def get_count(cls): # class method
+            return f'Created: {cls.count} {cls.__name__}'
+        @staticmethod
+        def get_count2(): # static method
+            return Employee.get_count()
+        def work(self): # user-defined method
+            print(f'{self.name} is working!\n')
+        def __str__(self): # builtin special method
+            return f'<Truckpad Employee: {self.name}>'
+        def __call__(self, *args, **kwargs):
+            return self.work()
+
+    if __name__ == '__main__':
+        alice = Employee('alice')
+        bob = Employee('bob')
+        print(Employee.get_count())  # call CLASS method
+        print(alice.get_count())  # call CLASS method
+        print(Employee.get_count2())  # call STATIC method
+        print(alice.get_count2())  # call STATIC method
+        # Employee.work() # call USER DEFINED method
+        alice.work()  # call USER DEFINED method
+        print(alice)  # call BUILTIN method
+        alice()  # call INSTANCE directly
+
+-----
+# 16. 4 Callable objects
+
+**In Python everything is object!!!**
+
+1. Function object 
+
+        def function_object():
+            print('calling function object')
+
+2. Class object 
+3. Method object 
+
+        class ClassObject:
+            def __init__(self):
+                print('calling class object')
+            def method_object (self):
+                print('calling method object')
+            def __call__(self, *args, **kwargs):
+                print(f'calling instance object')
+
+4. Instance object
+        
+        instance_object = ClassObject()
+        instance_object()
+
+-----
+
+# 17. Builtin method
+## 17.1 Index & Slice
+
+        class Indexer:
+            def __init__(self, value=None):
+                self.value = value or []
+
+            def __index__(self):
+                return 127
+
+            def __getitem__(self, item):
+                print(f'******** Access index: {item}')
+                return self.value[item]
+
+            def __setitem__(self, key, value):
+                print(f'******** Set <{key}> = <{value}>!')
+                self.value[key] = value
+
+
+        if __name__ == '__main__':
+            indexer = Indexer([1, 2, 3, 3, 4, 5])
+            print(indexer[0])
+            print(indexer[0:2])
+
+            indexer[0] = 100
+            indexer[0:2] = 50, 200, 300
+            print(indexer.value)
+
+            print(hex(indexer), end='\n\n')
+            print(oct(indexer), end='\n\n')
+            print(bin(indexer), end='\n\n')
+
+-----
+# 17. Builtin method
+
+## 17.2 Iterator
+
+        class Iterator:
+            def __init__(self, value):
+                self.data = value
+            def __iter__(self):
+                print(f'iter=>', end='')
+                self.ix = 0
+                return self
+            def __next__(self):
+                print(f'next:', end='')
+                if self.ix == len(self.data):
+                    raise StopIteration('iteration finished')
+                item = self.data[self.ix]
+                self.ix += 1
+                return item
+            def __getitem__(self, item): # Fallback
+                print(f'get[{item}]:', end='')
+                return self.data[item]
+        if __name__ == '__main__':
+            iterator = Iterator(range(1, 5))
+
+            # in for loop
+            print([i ** 2 for i in iterator])
+
+            # in builtin method which return one literal value
+            print(sum(iterator))
+            
+            # in builtin method which return some other type value
+            print(list(filter(lambda o: o%2==0, iterator)) )
+
+-----
+# 17 Builtin method
+## 17.3 Membership test
+
+        class MemberShip:
+            def __init__(self, value):
+                self.data = value
+            def __contains__(self, item):
+                print('contains: ', end='')
+                return item in self.data
+            def __iter__(self): # Fallback 1
+                print('iter=> ', end='')
+                self.ix = 0
+                return self
+            def __next__(self):
+                print('next:', end='')
+                if self.ix == len(self.data): raise StopIteration
+                item = self.data[self.ix]
+                self.ix += 1
+                return item
+            def __getitem__(self, item): # Fallback 2
+                print(f'get[{item}]:', end='')
+                return self.data[item]
+
+        if __name__ == '__main__':
+            x = MemberShip([1, 2, 3, 4, 5])
+            print(3 in x)
+
+            y = MemberShip('hello world')
+            print('z' in y)
+-----
+# 17 Builtin method
+## 17.4 Boolean test
+
+        class BooleanDemo:
+
+            def __init__(self, value):
+                self.data = value
+
+            def __bool__(self):
+                print('__bool__:', end='')
+                return False if self.data else True
+
+            def __len__(self): # Fallback
+                print('__len__:', end='')
+                return 0 if self.data else 1
+
+            def __gt__(self, other):
+                print('__gt__:', end='')
+                return self.data > other.data
+
+
+        if __name__ == '__main__':
+            zero, one  = BooleanDemo(0), BooleanDemo(1)
+            print('true' if bd else 'false')
+            print(one > zero)
+
+-----
+# 17. Builtin method
+## 17.5 Call expressions
+
+        class CallableInstanceClass:
+
+            def __init__(self, name):
+                print(f'calling class:<{self.__class__.__name__}>')
+                self.name = name
+
+            def __call__(self, *args, **kwargs):
+                print(f'calling instance:<{self.name}>')
+
+
+        if __name__ == '__main__':
+            print('callable expression demo!')
+            callable_instance = CallableInstanceClass('callable instance')
+            callable_instance()
+-----
+# 17. Builtin method
+## 17.6 Context manager
+
+        class ContextManager:
+            def __enter__(self):
+                print('With:    ', end='')
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                if not exc_type:
+                    print(' exit ok!')
+                else:
+                    print(f' exit error: {exc_type}!' )
+                    return True
+            def work(self):
+                print(':working:    ', end='')
+
+        if __name__ == '__main__':
+            with ContextManager() as cm:
+                cm.work()
+
+            with ContextManager() as cm:
+                cm.work()
+                raise ValueError('context error')
+
+-----
+# 17. Builtin method 
+## 17.7 Extra builtin methods
+
+* Boolean comparision: 
+
+     `__eq__,__ne__, __gt__, __ge__, __lt__, __le__`
+* Cusomize string representtion:
+
+    `__str__, __repr__`
+* Descturction method: 
+
+    `__del__`
+
+-----
+
+# 18. Class design
+
+* Class inheritance: **is-a**
+* Class composition: **has-a**
+* Class proxy: **agent**
+* Extras:
+    * Abstract Class
+    * Static & Class method: (showed before)
+    * Managed attribute: (showed before)
+    * Decorators
+    * Type subclasses & Meta classes
+
+-----
+# 18.1 Class inheritance 
+
+        class Employee:
+            def __init__(self, name=None, position=None, salary=None, department=None):
+                self.name, self.position, self.salary, self.department = name, position, salary, department
+        class EmployLevel:
+            def __init__(self, salary):
+                self.salary = salary
+        class Junior(EmployLevel):
+            def __init__(self):
+                super().__init__(2000)
+        class Full(EmployLevel):
+            def __init__(self):
+                super().__init__(3000)
+        class Senior(EmployLevel):
+            def __init__(self):
+                super().__init__(4000)
+        class Backend(Employee):
+            def __init__(self, name):
+                super().__init__(name=name, position='backend', department='engineer')
+        class BackendJunior(Backend, Junior):
+            def __init__(self, name):
+                Backend.__init__(self, name)
+                Junior.__init__(self)
+        if __name__ == '__main__':
+            alice = BackendJunior('alice')
+            print(alice.name, alice.position, alice.department, alice.salary)
+
+-----
+# 18.2 Class composition
+
+        import random
+        class Po:
+            def __init__(self, name):
+                self.name = name
+            def talk(self):
+                print(f'PO==>{self.name}: talking issue')
+        class Dev:
+            def __init__(self, name):
+                self.name = name
+            def talk(self):
+                print(f'DEV**>{self.name}: discuss issue')
+            def vote(self):
+                print(f'DEV-->{self.name}: vote issue: {random.randint(1, 21)}')
+        class Room:
+            def prepare(self):
+                print('----prepare air condition\n----prepare tv\n')
+        class PlanningEvent:
+            def __init__(self, room, po, devs):
+                self.room, self.po, self.devs = room, po, devs
+            def start(self):
+                self.room.prepare()
+                self.po.talk()
+                for dev in self.devs: dev.talk()
+                for dev in self.devs: dev.vote()
+        if __name__ == '__main__':
+            event = PlanningEvent(Room(), Po('alice'), [Dev('bob'), Dev('lucy')])
+            event.start()
+-----
+# 18.3 Class proxy
+
+        class Dev:
+            def __init__(self, name):
+                self.name = name
+
+            def internal_issue_handle(self, description):
+                print(f'DEV:[{self.name}] handling internal issue: <{description}>')
+
+        class Leader(Dev):
+            def external_issue_handle(self, description):
+                print(f'LEADER:[{self.name}] handling external issue: <{description}>')
+
+        class Team: # proxy class 
+            def __init__(self, leader, dev):
+                self.leader = leader
+                self.dev = dev
+
+            def __getattr__(self, item):
+                if item.startswith('external'):
+                    return getattr(self.leader, item)
+                if item.startswith('internal'):
+                    return getattr(self.dev, item)
+                return super(Team, self).__getattr__(item)
+
+        if __name__ == '__main__':
+            team = Team(Leader('alice'), Dev('bob'))
+            team.external_issue_handle('product problem!') # LEADER:[alice] handling external issue: <product problem!>
+            team.internal_issue_handle('bug problem!') # DEV:[bob] handling internal issue: <bug problem!>
+
+-----
+# 19. Class from scratch
+
+        class_parents = (object, )
+        class_name = 'Employee'
+        class_attributes = {'name':'truckpader', 'salary':0}
+        def bindable_work(self):
+            print(f'{self.name} is working')
+        def bindable_raise_salary(self, percent):
+            self.salary *= (1.0+percent)
+        def customized_init(self, name, salary=0):
+            self.name = name 
+            self.salary = salary
+        def customized_str(self):
+            return f'<{class_name}: name={self.name}, salary={self.salary}>'
+        class_methods={
+            '__init__':customized_init,
+            'work':bindable_work, 
+            'raise_salary':bindable_raise_salary, 
+            '__str__':customized_str
+        }
+        # Create a class from the bottom with a collection of components
+        MyClass = type(class_name, class_parents, {**class_attributes, **class_methods})
+        
+        if __name__ == "__main__":
+            bob=MyClass('bob', 2000)
+            print(bob)
+            bob.work()
+            bob.raise_salary(0.2)
+            print(bob)
+
+</div>
+
+
+<div class="step slide markdown" data-rotate="-90" data-x="3500" data-y="2000" data-z="-1000" data-scale="4">
+
+# 20. What else?
+
+* Hacking python decorator 
+* Hacking python iteration & comprehensions
+* Hacking python builtin data types
+
+
+</div>
+
+<script type="text/javascript">
+var enableBwCss = function(){
+    disableDevopsCss();
+    disableEffectsCss();
+};
+
+var enableDevopsCss = function(){
+    document.body.classList.add("devopsy");
+    disableEffectsCss();
+};
+
+var disableDevopsCss = function(){
+    document.body.classList.remove("devopsy");
+};
+
+var enableEffectsCss = function(){
+    document.body.classList.add("effects");
+    disableDevopsCss();
+};
+
+var disableEffectsCss = function(){
+    document.body.classList.remove("effects");
+};
+</script>
+
+
+<div class="step slide markdown" data-rotate="0" data-x="6500" data-y="7000" data-z="-2000">
+
+# Thanks
+
+## Happy hacking python  
+</div>
+
+
+<div id="overview" class="step" data-x="5000" data-y="4000" data-scale="10" style="pointer-events: none;" data-rotate="5">
+</div>
+
+</div>
+
+<div id="impress-toolbar"></div>
+<div id="impress-help"></div>
+
+
+<!-- Extra modules
+     Load highlight.js, mermaid.js and markdown.js from extras.
+     See also src/plugins/extras/extras.js -->
+<script type="text/javascript" src="js/extras/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="js/extras/mermaid/mermaid.min.js"></script>
+<script type="text/javascript" src="js/extras/markdown/markdown.js"></script>
+<!--
+    To make all described above really work, you need to include impress.js in the page.
+    You also need to call a `impress().init()` function to initialize impress.js presentation.
+    And you should do it in the end of your document. 
+-->
+<script type="text/javascript" src="js/class_impress.js"></script>
+<script>
+    document.body.classList.add("effects");
+    impress().init();
+</script>
+</body>
+</html>

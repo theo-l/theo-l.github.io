@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Hacking python decorator</title>
+  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" href="css/decorator_nature.css" type="text/css">
+  <!-- <link rel="stylesheet" href="css/decorator_pygments.css" type="text/css"> -->
+  <link rel="stylesheet" href="js/extras/highlight/styles/monokai.css" type="text/css">
+  <link rel="stylesheet" href="css/decorator_impress.css" type="text/css">
+  <link rel="stylesheet" href="css/decorator_customized.css" type="text/css">
+  <style>
+    code {
+      font-size: 15px;
+    }
+
+    .substep {
+      opacity: 0;
+    }
+
+    .substep.substep-visible {
+      opacity: 1;
+      transition: opacity 1s;
+    }
+
+    li {
+      font-family: monospace;
+    }
+
+    ol.bottle>li {
+      color: green;
+    }
+
+    ol.bag>li {
+      color: indigo;
+    }
+
+    li>ol>li {
+      font-size: 25px;
+    }
+  </style>
+</head>
+
+<body class="impress-supported impress-enabled" cz-shortcut-listen="true">
+  <div id="impress">
+
+    <div class="step center section present active" data-rotate-y="33" data-rotate-z="33" data-scale="5" data-x="-400"
+      data-y="-400" data-z="10000">
+      <h1>Hacking python decorator</h1>
+      <p>Liang Guisheng</p>
+      <p>theol.liang@gmail.com</p>
+    </div>
+
+    <div class="step slide section past" data-x="810.4534588022096" data-y="1262.2064772118447" data-z="0.0"
+      data-rotate-x="47.12388980384689" data-rotate-y="94.24777960769379" data-rotate-z="33">
+      <h2 class="center">Decorator in real life</h2>
+      <ol>
+        <li class="substep"> I have a bottle, but i want to put a string before use it, how?
+          <ol>
+            <li class="substep">Put the string on the bottle, and return the bottle</li>
+          </ol>
+        </li>
+        <li class="substep">
+          Now, i want to drink water with it, how?
+          <ol class="bottle">
+            <li class="substep"> Open the bottle</li>
+            <li class="substep"> Put water in it</li>
+            <li class="substep"> Drink </li>
+            <li class="substep"> Close the bottle</li>
+          </ol>
+        </li>
+
+        <li class="substep">I have a bottle above, and now i want put in a bag, how?
+          <ol>
+            <li class="substep">Put the bottle in the bag and return the bag</li>
+          </ol>
+        </li>
+        <li class="substep"> Now, I want to drink water, how?
+          <ol class="bag">
+            <li class="substep">Open the bag</li>
+            <li class="substep">Take out the bottle</li>
+            <li class="substep" style="color:green"><b> Open the bottle</b></li>
+            <li class="substep" style="color:green"><b> Put water in it</b></li>
+            <li class="substep" style="color:green"><b> Drink</b></li>
+            <li class="substep" style="color:green"><b>Close the bottle</b></li>
+            <li class="substep">Put bottle in the bag</li>
+            <li class="substep">Close the bag</li>
+          </ol>
+        </li>
+      </ol>
+
+    </div>
+
+    <div class="step slide section past" data-x="-624.2202548207136" data-y="1363.9461402385225"
+      data-z="1039.720770839918" data-rotate-x="94.24777960769379" data-rotate-y="188.49555921538757"
+      data-rotate-z="33">
+      <h2 class="center">How can we implement the 1st case in Python?</h2>
+      <pre><code class="python">
+        def bottle_decorator(bottle):
+            bottle.decoration = 'string'
+            return bottle
+        
+        @bottle_decorator
+        def bottle(drink='water'):
+            print(f'Open bottle\nPut {drink}\nDrink {drink}\nClose bottle\n')
+        
+        def bottle2(drink='water'):
+            print(f'Open bottle\nPut {drink}\nDrink {drink}\nClose bottle\n')
+        
+        def check_bottle_decoration(bottle):
+            print( f'Bottle <{bottle.__name__}> is decorated with {{{getattr(bottle, "decoration")}}}' 
+            if getattr(bottle, 'decoration', False) else f'Bottle <{bottle.__name__}> has not been decorated')
+        
+        if __name__ == "__main__":
+            # NOTE 1: check the effect of decorator, has different  
+            check_bottle_decoration(bottle)
+            check_bottle_decoration(bottle2)
+            # NOTE 2: check the function of the decorated object, no different
+            bottle('cocacola')
+            bottle2('cocacola')
+
+        </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-1484.988744900668" data-y="211.6800120898008"
+      data-z="1647.9184330021646" data-rotate-x="141.37166941154067" data-rotate-y="282.7433388230814"
+      data-rotate-z="33">
+      <h2 class="center">How can we implement the 2nd case in Python?</h2>
+      <pre><code class="python">
+        def package_bottle(bottle):
+            def bag(drink='water'):
+                print(f'----Open bag\n--Take bottle')
+                bottle(drink)
+                print(f'--Back bottle\n----Close bag\n')
+            return bag
+
+        @package_bottle
+        def bottle(drink='water'):
+            print(f'Open bottle\nPut <{drink}>\nDrink <{drink}>\nClose Bottle\n')
+
+        def bottle2(drink='water'):
+            print(f'Open bottle\nPut <{drink}>\nDrink <{drink}>\nClose Bottle\n')
+
+        def bottle3(drink='water'):
+            print(f'Open bottle\nPut <{drink}>\nDrink <{drink}>\nClose Bottle\n')
+
+        if __name__ == "__main__":
+            # NOTE 1: check effect of a wrapper decorator
+            bottle('Coca Cola')
+            bottle2('Coca Cola')
+
+            # NOTE 2: compare the effect of decorator and helper method call
+            decorated_bottle3 = package_bottle(bottle3)
+            decorated_bottle3('Coca Cola')
+            bottle3('Coca Cola')
+        </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-980.4654312954179" data-y="-1135.2037429618922"
+      data-z="2079.441541679836" data-rotate-x="188.49555921538757" data-rotate-y="376.9911184307752"
+      data-rotate-z="33">
+      <h2 class="center">What is decorator & Why decorator?</h2>
+      <br>
+      <h3>1. What is decorator?</h3 <span class="substep" style="font-size: 25px; color: blueviolet;">Decorator is a
+      tool to specify management code for callable object, which inserted after the definition of the callable
+      object</span>
+
+      <h3 class="substep">2. Why decorator?</h3>
+
+      <ul>
+        <li class="substep">Explicit syntax usage!</li>
+        <li class="substep">Apply one time after the object is created!</li>
+        <li class="substep">Make users recognise the augment logic more directly!</li>
+      </ul>
+
+      <h3 class="substep">3. Why not decorator?</h3>
+      <ul>
+        <li class="substep">Added extra code call!</li>
+        <li class="substep">Change the type of original object!</li>
+      </ul>
+    </div>
+    <div class="step slide section past" data-x="425.4932781948394" data-y="-1438.3864119947077"
+      data-z="2414.1568686511505" data-rotate-x="235.61944901923448" data-rotate-y="471.238898038469"
+      data-rotate-z="33">
+      <h2 class="center">Usage of decorator?</h2>
+      <ol>
+          <li class="substep"><b>Parameter validation</b>: Validate the parameter of an invocation if they are valid!</li>
+          <li class="substep"><b>Data caching</b>: Cache the same invocation's result for next use!</li>
+          <li class="substep"><b>Tracking invocation</b>: Log or time the detail about an invocation process!</li>
+          <li class="substep"><b>Provide invocation context</b>: Handle the invocation inside some context and handle them
+          internally!</li>
+          <li class="substep"><b>Register apis</b>: Register some features to the global application object</li>
+          <li class="substep"><b>Singleton model</b>: A kind of data cache extension, which control the initiation process of a
+          class</li>
+          <li class="substep"><b>Access control</b>: Control the attribute access from outside!</li>
+        <li class="substep">...</li>
+      </ol>
+    </div>
+    <div class="step slide section past" data-x="1440.2554299755489" data-y="-419.1232472983888"
+      data-z="2687.639203842082" data-rotate-x="282.7433388230814" data-rotate-y="565.4866776461628" data-rotate-z="33">
+      <h2 class="center">Decorator usage on Application</h2>
+      <p><b>Simple api register usage</b></p>
+      <pre><code class="python">
+      class Application:
+        APPLICATION = {}
+        def _route(self, url: str, method: str):
+            def register_decorator(callback):
+                prefix = f'{url.upper()}-{method.upper()}'
+                Application.APPLICATION[prefix] = callback
+                return callback
+            return register_decorator
+        def get(self, url):
+            return self._route(url, 'get')
+        def post(self, url):
+            return self._route(url, 'post')
+
+      class MockRequest:
+        def __init__(self, url, method, payload, headers):
+            self.url = url
+            self.method = method
+            self.payload = payload
+            self.headers = headers
+            self.prefix = f'{url.upper()}-{method.upper()}'
+
+      def client(request):
+          if request.prefix not in Application.APPLICATION:
+              return {'status':405, 'message': f'Method: {request.method.upper()} not allowed in url: {request.url.upper()}'}
+          print(Application.APPLICATION[request.prefix](request), end=f'\n{"-"*60}\n')
+
+      </code></pre>
+
+    </div>
+    <div class="step slide section past" data-x="1130.853381514957" data-y="985.4798980781836" data-z="2918.86522358297"
+      data-rotate-x="329.8672286269283" data-rotate-y="659.7344572538565" data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Simple api register usage</b></p>
+      <pre> <code class="python">
+      api = Application()
+      
+      @api.post('/truckpaders')
+      def create_truckpader(request: MockRequest):
+        return {'status':201, 'message':'create truckpader success!'}
+      
+      if __name__ == "__main__":
+          simple_create_truckpader_request= MockRequest('/truckpaders', 'post', payload={}, headers={})
+          client(simple_create_truckpader_request)
+
+      # OUTPUT
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      </code> </pre>
+    </div>
+    <div class="step slide section past" data-x="-218.2500507129203" data-y="1484.0373699350728"
+      data-z="3119.1623125197534" data-rotate-x="376.9911184307752" data-rotate-y="753.9822368615502"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Parameter validation usage</b></p>
+      <pre><code class="python">
+      def required_field(fields:list=None): # decorator as data validation
+          def view_decorator(endpoint):
+              def wrapped(request):
+                  payload = request.payload or {}
+                  missing_required_fields = set(fields)-set(payload.keys())
+                  if missing_required_fields:
+                      message = f'Required fields: {missing_required_fields} are missing'
+                      print(message)
+                      return {'status':422, 'message':message}
+                  return endpoint(request)
+              return wrapped
+          return view_decorator
+
+      @api.post('/truckpaders')
+      @required_field(['name']) # Added payload data validation
+      def create_truckpader(request: MockRequest):
+        return {'status':201, 'message':'create truckpader success!'}
+      
+      if __name__ == "__main__":
+          simple_create_truckpader_request= MockRequest('/truckpaders', 'post', payload={}, headers={})
+          client(simple_create_truckpader_request)
+          simple_create_truckpader_request.payload = {'name':'liang'}
+          client(simple_create_truckpader_request)
+
+      # Output
+      # {'status': 422, 'message': "Required fields: {'name'} are missing"}
+      # ------------------------------------------------------------
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-1366.6953928270154" data-y="618.1777278626349"
+      data-z="3295.8368660043293" data-rotate-x="424.1150082346221" data-rotate-y="848.2300164692439"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Data cache</b></p>
+      <pre><code class="python" style="font-size: 12px;">
+      CACHER = {}
+      def cache(seconds=1000): # decorator as data cacher
+          def view_decorator(endpoint):
+              def wrapped(request:'MockRequest'):
+                  global CACHER
+                  if request.prefix in CACHER:
+                      delta = datetime.now() - CACHER[request.prefix]['cache_time']
+                      if delta.total_seconds() <= seconds:
+                          print('fetching result from cache')
+                          return CACHER[request.prefix]['result']
+                  print('Reset cache value!')
+                  result = endpoint(request)
+                  CACHER[request.prefix] = {'result':result, 'cache_time':datetime.now()}
+                  return result
+              return wrapped
+          return view_decorator
+
+      @api.post('/truckpaders')
+      @cache(10)
+      def create_truckpader(request: MockRequest):
+        return {'status':201, 'message':'create truckpader success!'}
+
+      if __name__ == "__main__":
+          simple_create_truckpader_request= MockRequest('/truckpaders', 'post', payload={}, headers={})
+          client(simple_create_truckpader_request) # set cache
+          client(simple_create_truckpader_request) # reuse cache
+          time.sleep(10) # expire
+          client(simple_create_truckpader_request) # set cache
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-1258.6072936146786" data-y="-816.0316663340546"
+      data-z="3453.8776394910687" data-rotate-x="471.238898038469" data-rotate-y="942.4777960769376" data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p>Data cache continue...</p>
+      <pre><code class="python">
+      # OUTPUT
+      # Reset cache value!
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      # fetching result from cache
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      # Reset cache value!
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="6.638546982076178" data-y="-1499.9853098260553"
+      data-z="3596.842909197556" data-rotate-x="518.3627878423159" data-rotate-y="1036.7255756846314"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Context provider</b></p>
+      <pre><code class="python">
+      def error_handler(endpoint): # decorator as context provider
+        def wrapped(request:'MockRequest'):
+            try:
+                return endpoint(request)
+            except Exception:
+                return {'status':500, 'message':f'Server internal error:{str(error)}'}
+        return wrapped
+      
+      @api.post('/truckpaders')
+      @error_handler
+      def create_truckpader(request: MockRequest):
+        return {'status':201, message:'create truckpader success!'}
+
+      if __name__ == "__main__":
+          simple_create_truckpader_request= MockRequest('/truckpaders', 'post', payload={}, headers={})
+          client(simple_create_truckpader_request)
+
+      # OUTPUT 
+      # {'status': 500, 'message': "Server internal error:name 'message' is not defined"}
+      # ------------------------------------------------------------
+    </code></pre>
+
+    </div>
+    <div class="step slide section past" data-x="1265.7809380987383" data-y="-804.8593770006524"
+      data-z="3727.3599746820005" data-rotate-x="565.4866776461628" data-rotate-y="1130.973355292325"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Call tracking</b></p>
+      <pre><code class="python">
+      def api_tracker(time=True):
+        def view_decorator(endpoint):
+            def wrapped(request:'MockRequest'):
+                if time: start = datetime.now()
+                print('--------Before api call')
+                result = endpoint(request)
+                if time: end = datetime.now()
+                print(f'----target result:{result}')
+                print(f'--------After api call {(end-start).total_seconds() if time else ""}')
+                return result
+            return wrapped
+        return view_decorator
+
+    @app.post('/truckpaders')
+    @api_tracker() # track endpoint invocation 
+    def create_truckpader(request: 'MockRequest'):
+        time.sleep(2)
+        return {'status':201, 'message':'create truckpader success!'}
+
+    if __name__ == "__main__":
+      simple_create_truckpader_request= MockRequest('/truckpaders', 'post', {}, {})
+      client(simple_create_truckpader_request)
+    </code></pre>
+
+    </div>
+    <div class="step slide section past" data-x="1361.1701721752943" data-y="630.2505552399614"
+      data-z="3847.4240361923053" data-rotate-x="612.6105674500096" data-rotate-y="1225.2211349000188"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage in application</h2>
+      <p><b>Call tracking continue</b></p>
+      <pre><code class="python">
+      # OUTPUT
+      # --------Before api call
+      # ----target result:{'status': 201, 'message': 'create truckpader success!'}
+      # --------After api call 2.002185
+      # {'status': 201, 'message': 'create truckpader success!'}
+      # ------------------------------------------------------------
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="205.1058273117504" data-y="1485.9110335423056"
+      data-z="3958.585994422888" data-rotate-x="659.7344572538565" data-rotate-y="1319.4689145077125"
+      data-rotate-z="33">
+      <h2 class="center">Decorator usage Summary</h2>
+      <pre><code class="python">
+      import time
+      from api_register_demo4 import Application, MockRequest, client
+      from parameter_validation_demo5 import required_field
+      from data_cache_demo6 import cache
+      from context_provider_demo7 import error_handler
+      from api_tracker_demo8 import api_tracker
+      app = Application()
+
+      @app.post('/truckpaders')
+      @required_field(['name'])
+      # @cache(10) # will intercept every calls during the expiration period
+      @api_tracker() # the order of decorators matters
+      @error_handler
+      def create_truckpader(request:MockRequest):
+          time.sleep(1)
+          if getattr(request, 'error', False):
+              raise ValueError('Test context provider decorator!')
+          return {'status':201, 'message':'create truckpader success'}
+
+      if __name__ == "__main__":
+          create_request = MockRequest('/truckpaders', 'post')
+          client(create_request) # 422
+          create_request.payload = {'name':'liang'}
+          client(create_request) # 201
+          create_request.error=True
+          client(create_request) # 500
+          create_request.error=False
+          client(create_request)
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-1139.531869288232" data-y="975.4317602356753"
+      data-z="4062.075301653315" data-rotate-x="706.8583470577033" data-rotate-y="1413.7166941154062"
+      data-rotate-z="33">
+      <h2 class="center">Decorator implementation types</h2>
+      <pre><code class="python">
+      class DecoratorClass:
+          def __init__(self, obj):
+              print('calling decorator class')
+              self.decorator = 'class'
+              self.obj = obj
+          def decorator_method(self, obj):
+              print('calling decorator method')
+              obj.decorator = 'method'
+              return obj
+          def __call__(self, obj):
+              print('calling decorator instance')
+              obj.decorator = 'instance'
+              return obj
+      def decorator_function(obj):
+          print('calling decorator function')
+          obj.decorator = 'function'
+          return obj
+      @DecoratorClass
+      def obj1():pass
+      @obj1.decorator_method
+      def obj2():pass
+      @obj1
+      def obj3():pass
+      @decorator_function
+      def obj4():pass
+      if __name__ == "__main__":
+          # pass # show the decorator runtime 
+          for ix, obj in enumerate([obj1, obj2, obj3, obj4], 1):
+              print(f"obj{ix}'s decorator type is <{getattr(obj, 'decorator', 'unknown').upper()}>")
+      </code></pre>
+    </div>
+    <div class="step slide section past" data-x="-1436.4892204850769" data-y="-431.85497499759794"
+      data-z="4158.883083359672" data-rotate-x="753.9822368615502" data-rotate-y="1507.9644737231" data-rotate-z="33">
+      <h2 class="center">Decorator apply object types</h2>
+      <pre><code class="python">
+      import types
+      def general_decorator(obj):
+          if isinstance(obj, type):
+              obj.decoration_type = 'CLASS'
+          if isinstance(obj, types.FunctionType):
+              if obj.__name__ == '__call__':
+                  obj.decoration_type = 'INSTANCE'
+              elif 'function' in obj.__name__:
+                  obj.decoration_type = 'FUNCTION'
+              elif 'method' in obj.__name__:
+                  obj.decoration_type = 'METHOD'
+              else:
+                  obj.decoration_type = 'UNKNOWN'
+          return obj
+
+      @general_decorator
+      class Demo:
+          def __init__(self):
+              pass
+          @general_decorator
+          def method(self):
+              pass
+          @general_decorator
+          def __call__(self):
+              pass
+
+      @general_decorator
+      def function():
+          pass
+
+      if __name__ == "__main__":
+          for obj in [Demo, Demo.method, Demo.__call__, function]:
+              print(getattr(obj, 'decoration_type', 'UNKNOWN'))
+      </code></pre>
+      Slide 16
+    </div>
+    <div class="step slide section past" data-x="-412.74500707739537" data-y="-1442.096237819335"
+      data-z="4249.820016084324" data-rotate-x="801.106126665397" data-rotate-y="1602.2122533307936" data-rotate-z="33">
+      <h2 class="center">Function decorator VS Method decorator when use decorator class</h2>
+      <pre><code class="python">
+      class Decorator:
+        def __init__(self, callback):
+            self.callback  = callback 
+          
+        def __call__(self, *args, **kwargs):
+            print('calling instance callable protocol')
+            return self.callback(*args, **kwargs)
+          
+        # def __get__(self, instance, kwargs):
+            # print('calling descriptor protocol')
+            # def method_wrapper(*args, **kwargs):
+                # return self.callback(instance, *args, **kwargs)
+            # return method_wrapper
+
+      @Decorator
+      def hello_function(): print('calling hello function!')
+
+      class Hello:
+          @Decorator
+          def hello_method(self): print('calling hello method!')
+
+      if __name__ == "__main__":
+          hello_function()
+          h = Hello()
+          h.hello_method()
+      </code></pre>
+
+    </div>
+    <div class="step slide section past" data-x="990.4750623661203" data-y="-1126.4808701575141"
+      data-z="4335.557636844247" data-rotate-x="848.2300164692439" data-rotate-y="1696.4600329384873"
+      data-rotate-z="33">
+      <h2 class="center">What else?</h2>
+      <ol>
+        <li class="substep">Hacking Python iteration & comprehensions</li>
+        <li class="substep">Hacking Python builtin data types</li>
+      </ol>
+
+    </div>
+    <!-- <div class="step slide section past" data-x="1483.0569272800037" data-y="224.8158144944285"
+      data-z="4416.658468749661" data-rotate-x="895.3539062730907" data-rotate-y="1790.707812546181" data-rotate-z="33">
+      <h2 class="center">Thanks</h2>
+      <h3 class="center">Happy hacking python</h3>
+    </div> -->
+    <div class="step slide section past" data-x="612.1230927200879" data-y="1369.4178760914415"
+      data-z="4493.598410330987" data-rotate-x="942.4777960769376" data-rotate-y="1884.9555921538747"
+      data-rotate-z="33">
+      <h2 class="center">Thanks</h2>
+      <br>
+      <h3 class="center">Happy hacking python</h3>
+      <p class="center">Liang guisheng</p>
+      <p class="center">theol.liang@gmail.com</p>
+    </div>
+  </div>
+
+  <script src="js/extras/highlight/highlight.pack.js"></script>
+  <script src="js/class_impress.js"></script>
+  <script src="js/plugins/substep/substep.js"></script>
+  <script>
+    impress().init();
+    hljs.initHighlightingOnLoad();
+  </script>
+</body>
+</html>

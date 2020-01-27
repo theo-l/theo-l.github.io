@@ -1,0 +1,10 @@
+/* Substep plugin */
+
+#impress .step .substep {
+    opacity: 0;
+}
+
+#impress .step .substep.substep-visible {
+    opacity: 1;
+    transition: opacity 1s;
+}

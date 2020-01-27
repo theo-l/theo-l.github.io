@@ -1,0 +1,230 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title></title><meta charset="UTF-8"></meta><meta name="generator" content="Hovercraft! 1.0 http://regebro.github.com/hovercraft"></meta><link rel="stylesheet" href="css/hovercraft.css" media="all"></link><link rel="stylesheet" href="css/impressConsole.css" media="all"></link><link rel="stylesheet" href="css/highlight.css" media="all"></link><script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        TeX : { extensions : ['color.js'] }
+      });
+    </script></head><body class="impress-not-supported"><div id="impress" data-transition-duration="1000"><div class="step step-level-1" step="0" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="0" data-y="0" data-z="0"><h1 id="hacking-python-decorators">Hacking python decorators</h1><p class="center">Author: <em>Liang Guisheng</em></p><p>Email: <em>theol.liang@gmail.com</em></p></div><div class="step step-level-1" step="1" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="1600" data-y="0" data-z="0"><h1 id="what-is-decorator-and-python-decorator">1. What is decorator and python decorator?</h1><h2 id="what-is-decorator-literally-simulation">1.1 What is decorator (literally &amp; simulation)?</h2><h2 id="what-is-a-python-decorator">1.2 What is a python decorator ?</h2><blockquote><p>Decorator is a tool to specify management code for function and class object, which inserted after the definition of function and class</p></blockquote><h2 id="a-glance-of-python-decorator">1.3 A glance of python decorator</h2><p>Python decorator is just a simple protocol: a callable object receive a callable object and return a callable object</p><pre class="highlight code python"><span class="k">def</span> <span class="nf">public_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">public</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+
+<span class="k">def</span> <span class="nf">any_callable</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+<span class="nd">@public_decorator</span>
+<span class="k">def</span> <span class="nf">public_decorated_callable</span><span class="p">():</span>
+    <span class="k">pass</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'true'</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">any_callable</span><span class="p">,</span> <span class="s1">'public'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="k">else</span> <span class="s1">'false'</span><span class="p">)</span>
+    <span class="n">public_marked_callable</span> <span class="o">=</span> <span class="n">public_decorator</span><span class="p">(</span><span class="n">any_callable</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'true'</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">public_marked_callable</span><span class="p">,</span> <span class="s1">'public'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="k">else</span> <span class="s1">'false'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'true'</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">public_decorated_callable</span><span class="p">,</span> <span class="s1">'public'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span> <span class="k">else</span> <span class="s1">'false'</span><span class="p">)</span></pre></div><div class="step step-level-1" step="2" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="3200" data-y="0" data-z="0"><h1 id="why-use-decorator-in-python">2. Why use decorator in python?</h1><ul><li>Decorators have a very explicit syntax which makes them easier to spot than helper function calls(in some where else)</li><li>Decorators are applied once when the subject function or class is defined, no need to add extra code</li><li>Because of both of the above points, decorators make users recognise the augment logic more directly</li></ul></div><div class="step step-level-1" step="3" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="4800" data-y="0" data-z="0"><h1 id="decorator-s-categories">3. Decorator's categories</h1><h2 id="category-by-the-type-of-decorator-implementation">3.1 Category by the type of decorator implementation</h2><ol><li>decorator function<blockquote><p>decorator implemented by function object</p></blockquote></li><li>decorator class<blockquote><p>decorator implemented by class object, <strong>which is always return a wrapped object</strong></p></blockquote></li></ol><h2 id="category-by-the-return-value-of-decorator">3.2 Category by the return value of decorator</h2><ol><li>marker decorator<blockquote><p>the returned decorated object is the same as the origin object</p></blockquote></li><li>wrapper decorator<blockquote><p>the returned decorated object is different from the origin object</p><p><strong>decorator class always return the instance of the decorator class, which is not the original object</strong></p></blockquote></li></ol><h2 id="category-by-the-object-type-where-decorator-applied-to">3.3 Category by the object type where decorator applied to</h2><ol><li>function decorator<blockquote><p>The decorated object is a plain python function object</p></blockquote></li><li>class decorator<blockquote><p>The decorated object is a python class object</p></blockquote></li><li>method decorator<blockquote><p>The decorated object is a python class method</p></blockquote></li></ol><h2 id="category-by-the-complexity-of-implementation">3.4 Category by the complexity of implementation</h2><ol><li>A simple decorator(which do some action and return the origin object)</li><li>A simple nested decorator(decorator factory)</li><li>A wrapped decorator(which will wrap the origin object's action)</li></ol></div><div class="step step-level-1" step="4" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="6400" data-y="0" data-z="0"><h1 id="decorator-implementation-type-demo">3.1 Decorator implementation type demo</h1><pre class="highlight code python"><span class="c1"># Create a decorator with function definition</span>
+<span class="k">def</span> <span class="nf">public_decorator_function</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">is_public</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+
+
+<span class="c1"># Create a decorator with class definition</span>
+<span class="k">class</span> <span class="nc">public_decorator_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_public</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="nb">callable</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">callable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">non_public_function</span><span class="p">():</span>  <span class="c1"># method without marker decorator</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'non public function'</span><span class="p">)</span>
+
+
+<span class="nd">@public_decorator_function</span>
+<span class="k">def</span> <span class="nf">function_public_marked_function</span><span class="p">():</span>  <span class="c1"># method marked by decorator function</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'function public marked function'</span><span class="p">)</span>
+
+
+<span class="nd">@public_decorator_class</span>
+<span class="k">def</span> <span class="nf">class_public_marked_function</span><span class="p">():</span>  <span class="c1"># method marked by decorator class</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'class public marked function'</span><span class="p">)</span>
+
+
+<span class="c1"># helper to mock 'is_public' mark check</span>
+<span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="s1">'is_public'</span><span class="p">,</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'Non public callable object is not allowed!'</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="nb">callable</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">request</span><span class="p">(</span><span class="n">function_public_marked_function</span><span class="p">)</span>
+    <span class="n">request</span><span class="p">(</span><span class="n">class_public_marked_function</span><span class="p">)</span>
+    <span class="n">request</span><span class="p">(</span><span class="n">non_public_function</span><span class="p">)</span></pre></div><div class="step step-level-1" step="5" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="8000" data-y="0" data-z="0"><h1 id="decorator-return-value-type-demo">3.2 Decorator return value type demo</h1><pre class="highlight code python"><span class="c1"># decorator which return the original object</span>
+<span class="k">def</span> <span class="nf">simple_marker_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'simple'</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+
+
+<span class="c1"># decorator wrapped the original object and return the wrapper</span>
+<span class="k">def</span> <span class="nf">wrapped_marker_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'origin callable:{callable}'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">callable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">wrapper</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'wrapped'</span>
+
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+
+<span class="k">def</span> <span class="nf">func1</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Calling fun1'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">func2</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Calling fun2'</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">func1</span><span class="p">)</span>
+    <span class="c1"># here is the same as</span>
+    <span class="c1"># @simple_marker_decorator</span>
+    <span class="c1"># def func1():</span>
+    <span class="c1">#    ...</span>
+    <span class="n">func1</span> <span class="o">=</span> <span class="n">simple_marker_decorator</span><span class="p">(</span><span class="n">func1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">func1</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">func2</span><span class="p">)</span>
+    <span class="c1"># here is the same as</span>
+    <span class="c1"># @wrapped_marker_decorator</span>
+    <span class="c1"># def func2():</span>
+    <span class="c1">#    ...</span>
+    <span class="n">func2</span> <span class="o">=</span> <span class="n">wrapped_marker_decorator</span><span class="p">(</span><span class="n">func2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">func2</span><span class="p">)</span></pre></div><div class="step step-level-1" step="6" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="9600" data-y="0" data-z="0"><h1 id="decorator-application-object-type-demo">3.3 Decorator application object type demo</h1><pre class="highlight code python"><span class="k">def</span> <span class="nf">function_mark_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'function'</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+
+<span class="k">def</span> <span class="nf">class_mark_decorator</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+    <span class="n">klass</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'class'</span>
+    <span class="k">return</span> <span class="n">klass</span>
+
+<span class="k">def</span> <span class="nf">method_mark_decorator</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="n">method</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'function'</span>
+    <span class="k">return</span> <span class="n">method</span>
+
+<span class="k">class</span> <span class="nc">function_only_mark_decorator_class</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">mark</span> <span class="o">=</span> <span class="s1">'function_only_mark_decorator_class'</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">compatible_function_and_method_decorator_class</span><span class="p">(</span><span class="n">function_only_mark_decorator_class</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+<span class="nd">@function_mark_decorator</span>
+<span class="k">def</span> <span class="nf">function_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'calling function callable object!'</span><span class="p">)</span>
+
+<span class="nd">@function_only_mark_decorator_class</span>
+<span class="k">def</span> <span class="nf">function_callable2</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'calling function callable with function_callable_with_function_only_mark_decorator_class'</span><span class="p">)</span>
+
+<span class="nd">@compatible_function_and_method_decorator_class</span>
+<span class="k">def</span> <span class="nf">function_callable3</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'calling function callable with compatible_function_and_method_decorator_class!'</span><span class="p">)</span>
+
+<span class="nd">@class_mark_decorator</span>
+<span class="k">class</span> <span class="nc">ClassCallable</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'calling class callable object!'</span><span class="p">)</span>
+
+    <span class="nd">@method_mark_decorator</span>
+    <span class="k">def</span> <span class="nf">method_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'calling method callable object!'</span><span class="p">)</span>
+
+    <span class="nd">@function_only_mark_decorator_class</span>
+    <span class="k">def</span> <span class="nf">method_callable2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'calling method with function_only_mark_decorator_class'</span><span class="p">)</span>
+
+    <span class="nd">@compatible_function_and_method_decorator_class</span>
+    <span class="k">def</span> <span class="nf">method_callable3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'calling method with compatible_function_and_method_decorator_class'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">function_callable</span><span class="p">()</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">ClassCallable</span><span class="p">()</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">method_callable</span><span class="p">()</span>
+    <span class="n">function_callable2</span><span class="p">()</span>
+    <span class="c1"># obj.method_callable2()  # cause error</span>
+    <span class="n">function_callable3</span><span class="p">()</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">method_callable3</span><span class="p">()</span></pre></div><div class="step step-level-1" step="7" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="11200" data-y="0" data-z="0"><h1 id="decorator-complexity-type-demo">3.4 Decorator complexity type demo</h1><pre class="highlight code python"><span class="k">def</span> <span class="nf">red_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">'red'</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+<span class="k">def</span> <span class="nf">green_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="nb">callable</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">'green'</span>
+    <span class="k">return</span> <span class="nb">callable</span>
+<span class="k">def</span> <span class="nf">color_decorator</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">dynamic_color_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+        <span class="nb">callable</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">f</span><span class="s1">'&lt;{color.upper()}&gt;'</span>
+        <span class="k">return</span> <span class="nb">callable</span>
+    <span class="k">return</span> <span class="n">dynamic_color_decorator</span>
+<span class="k">def</span> <span class="nf">tracer_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">mark</span> <span class="o">=</span> <span class="s1">'====&gt;'</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{mark}Before calling method'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">callable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{mark}After calling method'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+<span class="k">def</span> <span class="nf">labeled_tracer</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">tracer_decorator</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{label}Before calling method!'</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">callable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{label}After calling method!</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">wrapper</span>
+    <span class="k">return</span> <span class="n">tracer_decorator</span>
+
+<span class="nd">@red_decorator</span>
+<span class="k">def</span> <span class="nf">static_red_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'static red callable'</span><span class="p">)</span>
+<span class="nd">@green_decorator</span>
+<span class="k">def</span> <span class="nf">static_green_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'static green callable'</span><span class="p">)</span>
+<span class="nd">@color_decorator</span><span class="p">(</span><span class="s1">'red'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">dynamic_red_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'dynamic red callable'</span><span class="p">)</span>
+<span class="nd">@color_decorator</span><span class="p">(</span><span class="s1">'green'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">dynamic_green_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'dynamic green callable'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">check_color</span><span class="p">(</span><span class="nb">callable</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Color of callable is: {getattr(callable, "color", None)}'</span><span class="p">)</span>
+
+<span class="nd">@tracer_decorator</span>
+<span class="k">def</span> <span class="nf">tracked_callable</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Tracked callable object'</span><span class="p">)</span>
+
+<span class="nd">@labeled_tracer</span><span class="p">(</span><span class="s1">'####&gt;'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">label_tracked_callable1</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Label tracked callable object 1'</span><span class="p">)</span>
+
+<span class="nd">@labeled_tracer</span><span class="p">(</span><span class="s1">'@@@@&gt;'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">label_tracked_callable2</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Label tracked callable object 2'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">check_color</span><span class="p">(</span><span class="n">static_red_callable</span><span class="p">)</span>
+    <span class="n">check_color</span><span class="p">(</span><span class="n">static_green_callable</span><span class="p">)</span>
+    <span class="n">check_color</span><span class="p">(</span><span class="n">dynamic_red_callable</span><span class="p">)</span>
+    <span class="n">check_color</span><span class="p">(</span><span class="n">dynamic_green_callable</span><span class="p">)</span>
+    <span class="n">tracked_callable</span><span class="p">()</span>
+    <span class="n">label_tracked_callable1</span><span class="p">()</span>
+    <span class="n">label_tracked_callable2</span><span class="p">()</span></pre></div><div class="step step-level-1" step="8" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="12800" data-y="0" data-z="0"><h1 id="pros-and-cons">4. Pros and Cons</h1><ul><li>Pros<blockquote><ul><li>Explicit syntax</li><li>Code maintenance</li><li>Consistency</li></ul></blockquote></li><li>Cons<blockquote><ul><li>Change the type of origin object</li><li>Introduced extra calls</li></ul></blockquote></li></ul></div><div class="step step-level-1" step="9" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="14400" data-y="0" data-z="0"><h1 id="decorator-applications-examples">5. Decorator applications Examples</h1><ol><li>tracking callable's invocation</li><li>Register api endpoint</li><li>Parameter data validation</li><li>Data caching</li><li>Context provider</li><li>Singleton pattern</li><li>Access control</li><li>...</li></ol></div><div class="step step-level-1" step="10" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="16000" data-y="0" data-z="0"><h1 id="register-api-endpoint-with-call-tracking-demo">6. Register api endpoint with call tracking demo</h1></div><div class="step step-level-1" step="11" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="17600" data-y="0" data-z="0"><h1 id="what-else">7. What else?</h1><ul><li>Hacking python</li></ul></div></div><div id="hovercraft-help" class="hide"><table><tr><th>Space</th><td>Forward</td></tr><tr><th>Right, Down, Page Down</th><td>Next slide</td></tr><tr><th>Left, Up, Page Up</th><td>Previous slide</td></tr><tr><th>G</th><td>Go to slide number</td></tr><tr><th>P</th><td>Open presenter console</td></tr><tr><th>H</th><td>Toggle this help</td></tr></table></div><script type="text/javascript" src="js/impress.js"></script><script type="text/javascript" src="js/impressConsole.js"></script><script type="text/javascript" src="js/hovercraft.js"></script></body></html>

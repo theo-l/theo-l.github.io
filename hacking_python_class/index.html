@@ -1,0 +1,381 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title></title><meta charset="UTF-8"></meta><meta name="generator" content="Hovercraft! 1.0 http://regebro.github.com/hovercraft"></meta><link rel="stylesheet" href="css/hovercraft.css" media="all"></link><link rel="stylesheet" href="css/impressConsole.css" media="all"></link><link rel="stylesheet" href="css/highlight.css" media="all"></link><link rel="stylesheet" href="plugins/substep.css" media="screen,projection"></link><script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        showProcessingMessages: false,
+        messageStyle: "none",
+        TeX : { extensions : ['color.js'] }
+      });
+    </script></head><body class="impress-not-supported"><div id="impress" data-transition-duration="1000"><div class="step step-level-1" step="0" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="0" data-y="0" data-z="0"><h1 id="hacking-python-oop-class">Hacking python OOP &amp; Class</h1><blockquote><p>Author: <em>Liang Guisheng</em></p><p>Email: <em>theol.liang@gmail.com</em></p></blockquote></div><div class="step step-level-1" step="1" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="1600" data-y="0" data-z="0"><h1 id="intro-to-oop-class">1. Intro to OOP &amp; Class</h1><h2 id="what-is-oop">1.1 What is OOP?</h2><blockquote><p>OOP offers a different and often more effective way of looking at programming, in which we factor code to minimize redundancy and write new programs by customizing exist code instead of change it in-place</p></blockquote><h2 id="what-is-a-python-class">1.2 What is a Python class?</h2><ol><li>Class is python's OOP tool</li><li><strong>Class is just a package of functions that use and process built-in object types</strong></li><li>Class is designed to create and manage new objects which also support inheritance (a mechanism of code customization and reuse anything of exist class object)**</li></ol><p class="substep"><em>NOTE: in Python OOP(Class) is entirely optional, so we don't really need to use class to start</em></p><h2 id="why-class">1.3 Why class?</h2><blockquote><ol><li>Inheritance<blockquote><p>The common properties data structure need to be implemented only once for
+the general case and be reused by all types of instances we
+may build in the future</p></blockquote></li><li>Composition<blockquote><p>Enable us to build some complex object which need many other component work together, like in <strong>GUI</strong> programming</p></blockquote></li><li>Features only in class<ol><li>Multiple instances: Essentially factories for generating one or more objects</li><li>Customization via inheritance: Extend a class in the outside of the class itself</li><li>Operator overloading: By providing special protocol builtin methods, class can work like python built-in types(slice, index)</li></ol></li></ol></blockquote><h2 id="look-into-python-class">1.4 Look into python class</h2><blockquote><ol><li>A name to identify a class</li><li><strong>A collection of attributes to define the status/state of a class</strong></li><li><strong>A collection of user-define methods to define the actions of a class</strong></li><li><strong>A collection of special protocol built-in methods to overload the built-in behaviors of a class</strong></li></ol></blockquote></div><div class="step step-level-1" step="2" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="3200" data-y="0" data-z="0"><h1 id="a-simple-python-class">1.5 A simple python class</h1><pre class="highlight code python"><span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span>
+
+    <span class="c1"># declared class attributes</span>
+    <span class="n">employee_count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">employee_position_count</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># A fake private attribute by python convention</span>
+    <span class="n">_some_private_value</span><span class="o">=</span><span class="s1">'some private value'</span>
+
+    <span class="c1"># declared some real private attribute, which can not access by instance/class directly</span>
+    <span class="n">__private_value</span> <span class="o">=</span> <span class="s1">'private'</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'age'</span><span class="p">,</span> <span class="s1">'position'</span><span class="p">,</span> <span class="s1">'_value'</span><span class="p">]</span> <span class="c1"># A python limited attribute access protocol</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1"># Where create the instance object(self)</span>
+        <span class="k">return</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">age</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+
+        <span class="c1"># Instance's attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="n">age</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+
+        <span class="c1"># Access class's attribute</span>
+        <span class="n">Employee</span><span class="o">.</span><span class="n">employee_position_count</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Employee</span><span class="o">.</span><span class="n">employee_position_count</span><span class="p">[</span><span class="n">position</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Employee</span><span class="o">.</span><span class="n">employee_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="s1">'test'</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># a kind of attribute based on **descriptor** protocol</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="nd">@value.setter</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># instance method</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{self.name} is working now!'</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_employee_count</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span> <span class="c1"># class method</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Total employee: {cls.employee_count}'</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_employee_position_count</span><span class="p">(</span><span class="n">position</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span> <span class="c1"># static method</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">position</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Employee in {position}: {Employee.employee_position_count[position]}'</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Employee in {position}: {Employee.employee_position_count.get(position, 0)}'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># Instance &amp; built-in method</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'({self.name} : {self.age} : {self.position})'</span></pre></div><div class="step step-level-1" step="3" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="4800" data-y="0" data-z="0"><h1 id="class-attributes">2. Class attributes</h1><h2 id="attribute-categories">2.1 Attribute categories</h2><ol><li>public attribute</li><li>private attribute</li><li>class attribute</li><li>descriptor managed attribute</li><li>instance attribute</li></ol><h2 id="attribute-search">2.2 Attribute search</h2><ul><li>Attribute access in python<blockquote><p>When we use the following code in python, will invoke python's attribute search</p><pre class="highlight code python"><span class="nb">object</span><span class="o">.</span><span class="n">attribute</span></pre></blockquote></li><li>Attribute search in general<blockquote><p><em>it searches a tree of linked objects, looking for the first appearance of attribute that it can find</em></p></blockquote></li><li>Attribute search in Class<blockquote><p><em>Find the first occurrence of attribute by looking in object , then in all classes above it, from bottom to top and left to right.</em></p></blockquote></li></ul><h2 id="special-protocol-method-in-class-for-attribute-access">2.3 Special protocol method in Class for attribute access</h2><ul><li>__getattribute__(self, item): Any kind of attribute access</li><li>__getattr__(self, item): Access non-exist(declared) attribute</li><li>__setattr__(self, key, value): Set instance attribute</li><li>descriptor access: __get__/__set__/__del__ descriptor managed attribute</li></ul></div><div class="step step-level-1" step="4" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="6400" data-y="0" data-z="0"><h1 id="work-with-class-attribute">Work with Class attribute</h1><pre class="highlight code python"><span class="k">class</span> <span class="nc">NameDescriptor</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before init descriptor attribute value: {value}'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After init descriptor attribute value: {value}</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before getting attribute in descriptor: &lt;{self.__class__.__name__}&gt;.__get__'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After getting attribute in descriptor: &lt;{self.__class__.__name__}&gt;.__get__</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before setting attribute in descriptor: &lt;{self.__class__.__name__}&gt;.__set__'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After setting attribute in descriptor: &lt;{self.__class__.__name__}&gt;.__set__</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">EmployeeAttributeDemo</span><span class="p">:</span>
+    <span class="n">public_value</span> <span class="o">=</span> <span class="s1">'public'</span>
+    <span class="n">_fake_private_value</span> <span class="o">=</span> <span class="s1">'fake private value'</span>  <span class="c1"># python convention private attribute</span>
+    <span class="n">__real_private_value</span> <span class="o">=</span> <span class="s1">'not really a private value'</span>  <span class="c1"># real private attribute(which is not really private)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">NameDescriptor</span><span class="p">(</span><span class="s1">'alice'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance_value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instance_value</span> <span class="o">=</span> <span class="n">instance_value</span>
+
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before setting value of &lt;{key}&gt; =&gt; &lt;{value}&gt; in __setattr__'</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EmployeeAttributeDemo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After setting value of &lt;{key}&gt; =&gt; &lt;{value}&gt; in __setattr__ </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s1">'__len__'</span><span class="p">:</span> <span class="c1"># avoid default invocation</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">EmployeeAttributeDemo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before getting value of &lt;{item}&gt; in __getattr__'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="s1">'age'</span><span class="p">:</span> <span class="k">return</span> <span class="mi">25</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EmployeeAttributeDemo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After getting value of &lt;{item}&gt; in __getattr__ </span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'__'</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Before getting value of &lt;{item}&gt; in __getattribute__'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">EmployeeAttributeDemo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'__'</span><span class="p">):</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'After getting value of &lt;{item}&gt; in __getattribute__</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="c1"># em = EmployeeAttributeDemo('original instance value')</span>
+
+    <span class="k">def</span> <span class="nf">check_attribute_access</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">new_value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attribute</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">attribute</span><span class="p">))</span>
+
+    <span class="c1"># check_attribute_access(obj, 'public_value', 'another public value')</span>
+    <span class="c1"># check_attribute_access(obj, '_fake_private_value', 'another fake private value')</span>
+    <span class="c1"># check_attribute_access(obj, 'name', 'new descriptor attribute value')</span>
+    <span class="c1"># check_attribute_access(obj, 'instance_value', 'new instance value')</span>
+    <span class="c1"># check_attribute_access(obj, 'age', 20)</span>
+    <span class="c1"># print(em.__real_private_value)  # cause error</span>
+    <span class="c1"># print(em._EmployeeAttributeDemo__real_private_value)  # cause error</span></pre></div><div class="step step-level-1" step="5" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="8000" data-y="0" data-z="0"><h1 id="class-methods">3. Class methods</h1><h2 id="what-is-a-python-class-method">3.1 What is a Python class method ?</h2><p>A class method is a function declared inside the declaration of class object. :)</p><h2 id="what-is-the-difference-between-method-function">3.2 What is the difference between method &amp; function ?</h2><ul><li>A function is declared outside of a class(which does not rely on class)</li><li>A method is declared inside a class (which is relies on class)</li><li>How to bind a plain function to a class manually?</li><li>Python callable objects <em>Function</em>, <em>Method</em>, <em>Class</em> and <em>Instance</em></li></ul><h2 id="class-method-categories">3.3 Class method categories</h2><ol><li>Class methods: (<strong>@classmethod</strong>)</li><li>Static methods: (<strong>@staticmethod</strong>)</li><li>Instance methods: method(self, *args, **kwargs)</li><li>built-in methods: (__new__ / __init__, ... )</li></ol></div><div class="step step-level-1" step="6" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="9600" data-y="0" data-z="0"><h1 id="python-callable-objects-comparison">4. Python callable objects comparison</h1><pre class="highlight code python"><span class="k">def</span> <span class="nf">unbindable_hello</span><span class="p">():</span> <span class="c1"># function callable</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'Hello, unbindable function'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plain_hello</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>  <span class="c1">#function callable function: when bound to class, name is going to be treated as self</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Hello, {name or "World"}'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">bindable_hello</span><span class="p">(</span><span class="n">mock_self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span> <span class="c1"># function/method callable</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Hello, {mock_self.name or name}'</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Hello</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span> <span class="c1"># class callable protocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="s1">'World'</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span> <span class="c1"># instance callable protocol</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'Instance : {self.name}'</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">'function vs method'</span>
+
+    <span class="n">unbindable_hello</span><span class="p">()</span> <span class="c1"># OK, NOTE: function call</span>
+    <span class="n">plain_hello</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="c1"># OK</span>
+
+    <span class="n">Hello</span><span class="o">.</span><span class="n">hello</span> <span class="o">=</span> <span class="n">bindable_hello</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="c1"># NOTE: class call</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span> <span class="c1"># OK, NOTE: method call</span>
+
+    <span class="n">Hello</span><span class="o">.</span><span class="n">hello</span> <span class="o">=</span> <span class="n">plain_hello</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span> <span class="c1"># OK</span>
+
+    <span class="n">Hello</span><span class="o">.</span><span class="n">hello</span> <span class="o">=</span> <span class="n">unbindable_hello</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">hello</span><span class="p">()</span> <span class="c1"># Fail</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">obj</span><span class="p">())</span> <span class="c1"># instance call</span></pre></div><div class="step step-level-1" step="7" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="11200" data-y="0" data-z="0"><h1 id="work-with-class-instance-user-defined-methods">5. Work with Class&amp;instance user-defined methods</h1><pre class="highlight code python"><span class="k">class</span> <span class="nc">Hello</span><span class="p">:</span>
+    <span class="n">instance_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">Hello</span><span class="o">.</span><span class="n">instance_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance_count</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">greeting</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'Hello, static: {name or "World"}!'</span>
+
+    <span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'Hello, instance: {name or self.name}!'</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'Hello, {self.name}!'</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">obj1</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="s1">'obj1'</span><span class="p">)</span>
+    <span class="n">obj2</span> <span class="o">=</span> <span class="n">Hello</span><span class="p">(</span><span class="s1">'obj2'</span><span class="p">)</span>
+
+    <span class="c1"># Class method invocation</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">Hello</span><span class="o">.</span><span class="n">children</span><span class="p">())</span> <span class="c1"># 2</span>
+
+    <span class="c1"># Static method invocation with both class &amp; instance</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">Hello</span><span class="o">.</span><span class="n">greeting</span><span class="p">(</span><span class="s1">'Class greeting'</span><span class="p">))</span> <span class="c1"># Hello, static: Class greeting!</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span><span class="o">.</span><span class="n">greeting</span><span class="p">(</span><span class="s1">'Instance greeting'</span><span class="p">))</span> <span class="c1"># Hello, static: Instance greeting!</span>
+
+    <span class="c1"># Instance method invocation with both class &amp; instance</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">Hello</span><span class="o">.</span><span class="n">hello</span><span class="p">(</span><span class="n">obj1</span><span class="p">))</span> <span class="c1"># Hello, instance: obj1!</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span><span class="o">.</span><span class="n">hello</span><span class="p">())</span> <span class="c1"># Hello, instance: obj1!</span>
+
+    <span class="c1"># Class builtin method invocation with instance implicitly</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span><span class="p">)</span> <span class="c1"># Hello, obj1!</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj2</span><span class="p">)</span> <span class="c1"># Hello, obj2!</span></pre></div><div class="step step-level-1" step="8" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="12800" data-y="0" data-z="0"><h1 id="work-with-python-class-built-in-methods">6. Work with Python class built-in methods</h1><pre class="highlight code python"><span class="k">class</span> <span class="nc">BuiltinDemo</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">bool_value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">iter_value</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">context_obj</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">slice_obj</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bool_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice_obj</span> <span class="o">=</span> <span class="n">value</span><span class="p">,</span> <span class="n">bool_value</span><span class="p">,</span> <span class="n">iter_value</span><span class="p">,</span> <span class="n">context_obj</span><span class="p">,</span><span class="n">slice_obj</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'invoking __getitem__ method with: {item}'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slice_obj</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'invoking __setitem__ method with: {key} = {value}'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slice_obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Invoking __bool__ method!'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bool_value</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Invoking __len__ method!'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'invoking __next__ method!'</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iter_value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">'finished iteration!'</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span><span class="p">(</span><span class="s1">'Finished iteration'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iter_value</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'invoking __iter__ method!'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'invoking __enter__ method in with context'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">context_obj</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">exc_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'invoking __exit__ method with error: {exc_val}!'</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">True</span>  <span class="c1"># no propagate exception. False will propagate error</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'invoking __exit__ method in with context normally'</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">BuiltinDemo</span><span class="p">(</span><span class="s1">'demo'</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s1">'context_value'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">'true'</span> <span class="k">if</span> <span class="n">obj</span> <span class="k">else</span> <span class="s1">'false'</span><span class="p">)</span> <span class="c1"># boolean context</span>
+    <span class="k">print</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">])</span> <span class="c1"># iteration context</span>
+    <span class="k">with</span> <span class="n">obj</span> <span class="k">as</span> <span class="n">o</span><span class="p">:</span> <span class="c1"># with context</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Context returned object:{o}'</span><span class="p">)</span>
+        <span class="c1"># raise ValueError('context error!') # with error</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span> <span class="o">+</span> <span class="n">obj2</span><span class="p">)</span>  <span class="c1"># hello world!</span>
+    <span class="n">obj1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">obj1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></pre></div><div class="step step-level-1" step="9" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="14400" data-y="0" data-z="0"><h1 id="python-class-designs">7. Python Class designs</h1><ul><li>OOP &amp; Inheritance: Is-a Relation</li><li>OOP &amp; Composition: Has-a Relation</li><li><dl><dt>OOP &amp; Delegation: Proxy object</dt><dd><p>A controller class manage the access of another object which is embedded.
+<em>In python we often implemented this pattern with __getattr__ method hook</em></p></dd></dl></li><li><dl><dt>Extra class design-related topics</dt><dd><ol><li>Static &amp; Class methods (<strong>showed before</strong>)</li><li>Managed attributes (<strong>Showed before</strong>)</li><li>Abstract superclasses</li><li>Decorators</li><li>Type subclasses &amp; Meta classes</li></ol></dd></dl></li></ul></div><div class="step step-level-1" step="10" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="16000" data-y="0" data-z="0"><h1 id="oop-inheritance-demo">7.1 OOP &amp; Inheritance Demo</h1><pre class="highlight code python"><span class="k">class</span> <span class="nc">Employee</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">salary</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">salary</span>
+
+    <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'{self.name} does stuff'</span>
+
+    <span class="k">def</span> <span class="nf">raise_salary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">percent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'&lt;Employee: name={self.name}, salaray={self.salary}&gt;'</span>
+
+
+<span class="k">class</span> <span class="nc">Chef</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">Employee</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="mi">5000</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'{self.name} makes food'</span>
+
+
+<span class="k">class</span> <span class="nc">Server</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">Employee</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="mi">4000</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">'{self.name} attend customer'</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">bob</span> <span class="o">=</span> <span class="n">Chef</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">)</span>
+    <span class="n">lucy</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="s1">'Lucy'</span><span class="p">)</span></pre></div><div class="step step-level-1" step="11" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="17600" data-y="0" data-z="0"><h1 id="oop-composition-demo">7.2 OOP &amp; Composition Demo</h1><pre class="highlight code python"><span class="kn">from</span> <span class="nn">talks.hacking_python_class.class_inheritance_relation</span> <span class="kn">import</span> <span class="n">Server</span><span class="p">,</span> <span class="n">Chef</span>
+
+
+<span class="k">class</span> <span class="nc">Customer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Client &lt;{self.name}&gt; orders from {server}'</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">pay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'Client &lt;{self.name}&gt; pays for item to {server}'</span><span class="p">)</span>
+        <span class="n">server</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Oven</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">bake</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">'oven bakes'</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">PizzaShop</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">server</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="s1">'Pat'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chef</span> <span class="o">=</span> <span class="n">Chef</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oven</span> <span class="o">=</span> <span class="n">Oven</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">customer</span> <span class="o">=</span> <span class="n">Customer</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">customer</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chef</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oven</span><span class="o">.</span><span class="n">bake</span><span class="p">()</span>
+        <span class="n">customer</span><span class="o">.</span><span class="n">pay</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">tp_pizza</span> <span class="o">=</span> <span class="n">PizzaShop</span><span class="p">()</span>
+    <span class="n">tp_pizza</span><span class="o">.</span><span class="n">order</span><span class="p">(</span><span class="s1">'Python'</span><span class="p">)</span></pre></div><div class="step step-level-1" step="12" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="19200" data-y="0" data-z="0"><h1 id="oop-proxy-demo">7.3 OOP &amp; Proxy Demo</h1><pre class="highlight code python"><span class="kn">from</span> <span class="nn">talks.hacking_python_class.class_inheritance_relation</span> <span class="kn">import</span> <span class="n">Chef</span>
+
+
+<span class="k">class</span> <span class="nc">TracerWrapper</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wrapped</span> <span class="o">=</span> <span class="n">obj</span>  <span class="c1"># this obj object is embedded in a proxy manager class TracerWrapper</span>
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attribute_name</span> <span class="o">==</span> <span class="s1">'__len__'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">TracerWrapper</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'====before proxy tracing access of: {attribute_name}'</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'====after proxy tracing access of: {attribute_name}'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">chef</span> <span class="o">=</span> <span class="n">TracerWrapper</span><span class="p">(</span><span class="n">Chef</span><span class="p">(</span><span class="s1">'bob'</span><span class="p">))</span>
+    <span class="c1"># Call a method which is not exist in the proxy class TracerWrapper, will actually</span>
+    <span class="c1"># call the managed object's method</span>
+    <span class="n">chef</span><span class="o">.</span><span class="n">work</span><span class="p">()</span></pre></div><div class="step step-level-1" step="13" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="20800" data-y="0" data-z="0"><h1 id="python-class-from-the-scratch-demo">8. Python class from the scratch demo</h1><pre class="highlight code python"><span class="n">class_parents</span> <span class="o">=</span> <span class="p">(</span><span class="nb">object</span><span class="p">,)</span>
+<span class="n">class_name</span> <span class="o">=</span> <span class="s1">'Employee'</span>
+
+<span class="n">class_attributes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span> <span class="s1">'salary'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">bindable_work</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">'{self.name} is working!'</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">customized_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">salary</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">=</span> <span class="n">salary</span>
+
+
+<span class="k">def</span> <span class="nf">customized_raise_salary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percent</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">salary</span> <span class="o">*=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">percent</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">customized_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f</span><span class="s1">'&lt;{class_name}: name={self.name}, salary={self.salary}&gt;'</span>
+
+
+<span class="n">class_methods</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'__init__'</span><span class="p">:</span> <span class="n">customized_init</span><span class="p">,</span>
+    <span class="s1">'work'</span><span class="p">:</span> <span class="n">bindable_work</span><span class="p">,</span>
+    <span class="s1">'raise_salary'</span><span class="p">:</span> <span class="n">customized_raise_salary</span><span class="p">,</span>
+    <span class="s1">'__str__'</span><span class="p">:</span> <span class="n">customized_str</span>
+<span class="p">}</span>
+
+<span class="n">Employee</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">class_parents</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">class_attributes</span><span class="p">,</span> <span class="o">**</span><span class="n">class_methods</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">'__main__'</span><span class="p">:</span>
+    <span class="n">bob</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span><span class="s1">'Bob'</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">bob</span><span class="p">)</span>
+    <span class="n">bob</span><span class="o">.</span><span class="n">work</span><span class="p">()</span>
+    <span class="n">bob</span><span class="o">.</span><span class="n">raise_salary</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">bob</span><span class="p">)</span></pre></div><div class="step step-level-1" step="14" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="22400" data-y="0" data-z="0"><h1 id="what-else">9. What else ?</h1><ol><li>Hacking python decorators, descriptors and metaclass</li><li>Hacking python iteration &amp; comprehensions</li><li>Hacking python built-in data types</li></ol></div><div class="step step-level-1" step="15" data-rotate-x="0" data-rotate-y="0" data-rotate-z="0" data-scale="1" data-x="24000" data-y="0" data-z="0"><h1 id="thanks">Thanks</h1><p>Happy hacking python</p></div></div><div id="hovercraft-help" class="hide"><table><tr><th>Space</th><td>Forward</td></tr><tr><th>Right, Down, Page Down</th><td>Next slide</td></tr><tr><th>Left, Up, Page Up</th><td>Previous slide</td></tr><tr><th>G</th><td>Go to slide number</td></tr><tr><th>P</th><td>Open presenter console</td></tr><tr><th>H</th><td>Toggle this help</td></tr></table></div><script type="text/javascript" src="js/impress.js"></script><script type="text/javascript" src="js/impressConsole.js"></script><script type="text/javascript" src="js/hovercraft.js"></script><script type="text/javascript" src="plugins/substep.js"></script></body></html>
