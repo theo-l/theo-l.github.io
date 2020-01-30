@@ -21,11 +21,11 @@ def api_tracker(time=True):
 
 app = Application()
 
-@app.post('/truckpaders')
-@api_tracker() # NOTE 1: track the call of endpoint
+# @api_tracker() # NOTE 1: track the call of endpoint
 def create_truckpader(request: 'MockRequest'):
     time.sleep(1)  
     return {'status': 201, 'message': 'create truckpader success!'}
+create_truckpader = app.post('/truckpaders')(api_tracker()(create_truckpader))
 
 if __name__ == "__main__":
     create_requeset = MockRequest('/truckpaders', 'post')

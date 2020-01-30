@@ -29,7 +29,7 @@ app = Application()
 @app.post('/truckpaders')
 @cache(10)
 def create_truckpader(request:MockRequest):
-    time.sleep(3)
+    # time.sleep(3)
     return {'status':201, 'message':'create truckpader success!'}
 
 

@@ -1,4 +1,5 @@
 class Decorator:
+
     def __init__(self, callback):
         self.callback  = callback 
 
@@ -6,12 +7,12 @@ class Decorator:
         print('calling instance callable protocol')
         return self.callback(*args, **kwargs)
 
-    # def __get__(self, instance, kwargs):
-        # print('calling descriptor protocol')
-        # def method_wrapper(*args, **kwargs):
-            # return self.callback(instance, *args, **kwargs)
-        # return method_wrapper
-
+    def __get__(self, instance, kwargs):
+        print('calling descriptor protocol')
+        def method_wrapper(*args, **kwargs):
+            return self.callback(instance, *args, **kwargs)
+        return method_wrapper
+# 
 @Decorator
 def hello_function(): print('calling hello function!')
 

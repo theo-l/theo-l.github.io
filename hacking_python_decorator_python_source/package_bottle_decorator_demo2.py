@@ -21,8 +21,8 @@ def bottle3(drink='water'):
 
 if __name__ == "__main__":
     # NOTE 1: check effect of a wrapper decorator
-    bottle('Coca Cola')
-    bottle2('Coca Cola')
+    # bottle('Coca Cola')
+    # bottle2('Coca Cola')
 
     # NOTE 2: compare the effect of decorator and helper method call
     decorated_bottle3 = package_bottle(bottle3)
@@ -33,4 +33,4 @@ if __name__ == "__main__":
     bottle3('Coca Cola') 
     
     # NOTE: So if any other place where we need use the object the decorator feature, we need call the helper method
-    decorated_bottle3_2('Coca Cola') 
+    # decorated_bottle3_2('Coca Cola') 

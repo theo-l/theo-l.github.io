@@ -11,9 +11,9 @@ app = Application()
 
 @app.post('/truckpaders')
 @required_field(['name'])
-# @cache(10) # will intercept every calls during the expiration period
 @api_tracker() # the order of decorators matters
 @error_handler
+@cache(10) # will intercept every calls during the expiration period
 def create_truckpader(request:MockRequest):
     time.sleep(1)
     if getattr(request, 'error', False):

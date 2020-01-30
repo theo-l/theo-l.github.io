@@ -29,5 +29,5 @@ if __name__ == "__main__":
     client(create_request)
 
     # NOTE 1: required fields needed
-    # create_request.payload={'name':'liang'}
-    # client(create_request)
+    create_request.payload={'name':'liang'}
+    client(create_request)
