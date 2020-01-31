@@ -42,35 +42,56 @@
 
     <!-- left side -->
     <div class="slide step" data-x="1600" data-y="-400" data-z="-100" data-rotate-y="90" >
-        <h2 class="center">A simple glance at iteration</h2>
-        <pre><code class="python">
+        <h2 class="center">Iterator in real life</h2>
+        <p class="substep">In a pizzaeria, normally there are 2 ways the waiter serve a pizza for the client.</p>
+        <ol>
+            <li class="substep">Put the whole pizza on the table and the client take care of the pizza</li>
+            <li class="substep">The waiter put a piece of pizza in the plate of each client on the table, the client don't care about the pizza!</li>
+        </ol>
+        <br/>
+        <p class="substep">For the client to eat pizza,  what is the different between these 2 ways ?</p>
 
-        </code></pre>
-    </div>
-    <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" > 
-        <h2 class="center">A simple glance at list comprehensions</h2> 
-        <pre><code class="python">
-
-        </code></pre>
-    </div>
-    <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" >
-        <h2 class="center">Iteration contexts</h2> 
-        <h3>
-            Keep in mind, every tool that scans from left to right across objects uses the iteration protocol.
-            This includes: <i>for loop</i>
-        </h3>
         <ul>
-            <li>For loop iteration context</li>
-            <li>List comprehensions</li>
-            <li>Builtin method contexts
+            <li class="substep">In the 1st way: 
                 <ul>
-                    <li>map, filter,zip</li>
-                    <li>reduce, sum, max, min</li>
-                    <li>all, any, in</li>
-                    <li>sorted</li>
-                </ul>
+                    <li class="substep">The pizza will occupy the table space</li>
+                    <li class="substep">The clients need to put pizza into their plate by themselves</li>
+                    <li class="substep">Then they start to eat pizza</li>
+                </ul> 
+            </li>
+            <li class="substep">In the 2nd way:
+                <ul>
+                    <li class="substep">The pizza no need to be put on the table</li>
+                    <li class="substep">The client ask the waiter to serve the pizaa</li>
+                    <li class="substep">The client start to eat pizza</li>
+                </ul> 
             </li>
         </ul>
+        
+        <h3 class="substep center fly-in"><b>Which kind of service do you want? :)</b></h3>
+    </div>
+    <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" > 
+        <h2 class="center">Iterable, Iterator, Iteration context, Iteration protocol</h2> 
+
+        <p>Let's take the example above to explain what is iterable, iterator, iteration protocol :)</p>
+        <br/>
+        <br/>
+
+        <ol>
+            <li class="substep"><b>Iterable object:</b> Pizza is the object which contains many pieces, and we eat it piece by piece. </li>
+            <br></br>
+            <li class="substep"><b>Iterator:</b> The waiter in the 2nd pizzaeria, who will serve one piece of pizza when we ask him</li>
+            <br></br>
+            <li class="substep"><b>Iterator protocol:</b>The method the waiter use to serve pizza to the client  </li>
+            <br></br>
+            <li class="substep"><b>Iteration context:</b>In the 2nd pizzaeria, every time the waiter serve the pizza to the client, he need to use the <i>Iteration protocol</i> to serve. So the 2nd pizzaeria is like a iteration context!</li>
+        </ol>
+
+
+    </div>
+    <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" >
+        <h2 class="center">Real life case in Python :)</h2> 
+
     </div>
     <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" > 
     <h2 class="center">For loop iteration context</h2> 
