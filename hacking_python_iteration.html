@@ -166,15 +166,64 @@
             def ask_pizza(self, waiter: Waiter):
                 return waiter.next()
 
-
-
+        if __name__ == "__main__":
+            print(f'\n{"="*40}')
+            liang = Client()
+            pizza_type = liang.order_pizza('list')
+            pizza = Pizzaeria.make_list_pizza()  # call directly
+            try:
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+                liang.ask_pizza(pizza)
+            except StopIteration as e:
+                print(f'\n{"="*40}\n{e}\n')
         </code> </pre>
     </div>
     <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
-    <h2 class="center">map, filter, zip iteration context</h2> 
+        <h2 class="center">Iteration context in python >o<</h2> 
+        <ol>
+            <li>Common builtin data type constructor: <b>list, tuple, set, dict</b></li>
+            <li>Common builtin  function tools which return iterator: <b>map, filter, zip</b></li>
+            <li>Common builtin function tools which return non-iterator:<b>sum, max, min, all, any, sorted</b></li>
+            <li>For loop & List comprehensions expression:<b>for, list/set/dict comprehensions </b> </li>
+            <li>Function variable length parameter: <b>*args</b></li>
+        </ol>
+
+        <h3>The demo iterable class </h3>
+        <pre><code class="python">
+        class Iterable:
+            def __init__(self, data, multiple=True):
+                self.data = data
+                self.multiple = multiple
+                self.ix = 0
+        
+            def __iter__(self):
+                print('iter:', end='')
+                if self.multiple: 
+                    print('reset index:', end='')
+                    self.ix = 0
+                    return copy.copy(self)
+                return self
+        
+            def __next__(self):
+                print('next:', end='')
+                if  len(self.data) <= self.ix:
+                    raise StopIteration('finished iteration')
+                result  = self.data[self.ix]
+                self.ix += 1
+                return result
+        </code></pre>
     </div>
     <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
-    <h2 class="center">reduce, sum, max, min</h2> 
+    <h2 class="center">Iteration context in builtin data type constructor:<i>list, tuple, set... </i></h2> 
+    <pre><code class="python">
+
+    </code></pre>
+
     </div>
     <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
     <h2 class="center">all, any, in iteration context</h2> 
