@@ -258,25 +258,34 @@
         <p>List comprehensions is a shortcut syntax of for loop which is also an iteration context!</p>
         <br></br>
         <br></br>
-        <p>problem:<b>Get the asiic order of each char's uppercase in a string</b></p>
+        <p>problem:<b>Get the ASCII order of each char's uppercase in a string</b></p>
         <pre><code class="python">
-
-        string = 'Hello, python list comprehensions!'
+        if __name__ == "__main__":
+            string = 'hello, python list comprehensions'
         
-        # Normal for loop solution
-
-        ords = []
-        for c in string:
-            ords.append(ord(c.upper()))
-        print(ords)
-
-        # List comprehensions solution
-        print([ord(c.upper()) for c in string])
-
-        # Function solution
-        print(list(map(lambda c: ord(c.upper()), string)))
-
+            print([ord(c.upper()) for c in string])
+            print({ord(c.upper()) for c in string})
+            print({c.upper():ord(c.upper()) for c in string})
+            print((ord(c.upper()) for c in string)) # Generator
         
+            print('\n', '-'*60, '\n')
+        
+            # Normal for loop
+            list_ords = []
+            for c in string:
+                list_ords.append(ord(c.upper()))
+            print(list_ords)
+        
+        
+            set_ords = set()
+            for c in string:
+                set_ords.add(ord(c.upper()))
+            print(set_ords)
+        
+            dict_ords = {}
+            for c in string:
+                dict_ords.update({c.upper():ord(c.upper())})
+            print(dict_ords)
         </code></pre>
 
     </div>
