@@ -80,13 +80,12 @@
         <ol>
             <li class="substep"><b>Iterable object:</b> Pizza is the object which contains many pieces, and we eat it piece by piece. </li>
             <br></br>
-            <li class="substep"><b>Iterator:</b> The waiter in the 2nd pizzaeria, who will serve one piece of pizza when we ask him</li>
-            <br></br>
             <li class="substep"><b>Iterator protocol:</b>The method the waiter use to serve pizza to the client  </li>
+            <br></br>
+            <li class="substep"><b>Iterator:</b> The waiter in the 2nd pizzaeria, who will serve one piece of pizza when we ask him</li>
             <br></br>
             <li class="substep"><b>Iteration context:</b>In the 2nd pizzaeria, every time the waiter serve the pizza to the client, he need to use the <i>Iteration protocol</i> to serve. So the 2nd pizzaeria is like a iteration context!</li>
         </ol>
-
 
     </div>
     <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-1900" data-rotate-y="90" >
@@ -183,6 +182,40 @@
         </code> </pre>
     </div>
     <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
+        <h2 class="center">Iterable object vs Iterator</h2>
+        <pre><code class="python">
+        import collections
+        # iterable objects
+        list_iterable = [1, 2, 3, 4, 5]
+        tuple_iterable = (1, 2, 3, 4, 5)
+        set_iterable = {1, 2, 3, 4, 5}
+        dict_iterable = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
+        
+        for iterable_object in (list_iterable, tuple_iterable, set_iterable, dict_iterable):
+            # print(iterable_object)
+            iterator_object = iter(iterable_object) # NOTE convert iterable object to iterator object
+            while True:
+                try:
+                    print(next(iterator_object)) # NOTE only iterator object can be used in next context
+                    # print(next(iterable_object))
+                except StopIteration:
+                    print('\n\n')
+                    break
+        
+        # iterator object in python
+        list_iter = iter(list_iterable)
+        tuple_iter = iter(tuple_iterable)
+        set_iter = iter(set_iterable)
+        dict_iter = iter(dict_iterable)
+        map_iter = map(lambda o: o * 2, [1, 2, 3, 4, 5])
+        filter_iter = filter(lambda o: o % 2 == 0, [1, 2, 3, 4, 5, 6, 7])
+        zip_iter = zip([1, 2, 3, 4, 5], [6, 7, 8, 9, 10])
+        
+        for it in (list_iter, tuple_iter, set_iter, dict_iter, map_iter, filter_iter, zip_iter):
+            print(type(it), isinstance(it, collections.Iterator))
+       </code></pre>
+    </div>
+    <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
         <h2 class="center">Iteration contexts in python >o<</h2> 
         <ol>
             <li>Common builtin data type constructor: <b>list, tuple, set, dict</b></li>
@@ -253,7 +286,10 @@
 
     </code></pre>
     </div>
-    <div class="slide step" data-x="1600" data-y="1300" data-rel-z="-1900" data-rotate-y="90" > 
+
+    <!-- right side -->
+    <div class="slide step" data-x="-1600" data-y="-400" data-z="-100" data-rotate-y="270" > 
+
         <h2 class="center">List comprehensions intro <_<</h2> 
         <p>List comprehensions is a shortcut syntax of for loop which is also an iteration context!</p>
         <br></br>
@@ -269,12 +305,11 @@
         
             print('\n', '-'*60, '\n')
         
-            # Normal for loop
+            # NOTE: Normal for loop
             list_ords = []
             for c in string:
                 list_ords.append(ord(c.upper()))
             print(list_ords)
-        
         
             set_ords = set()
             for c in string:
@@ -286,12 +321,6 @@
                 dict_ords.update({c.upper():ord(c.upper())})
             print(dict_ords)
         </code></pre>
-
-    </div>
-
-    <!-- right side -->
-    <div class="slide step" data-x="-1600" data-y="-400" data-z="-100" data-rotate-y="270" > 
-    <h2 class="center">sorted iteration context</h2> 
     </div>
     <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > slide10 </div>
     <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > slide11 </div>
