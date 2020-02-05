@@ -322,15 +322,152 @@
             print(dict_ords)
         </code></pre>
     </div>
-    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > slide10 </div>
-    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > slide11 </div>
-    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > slide12 </div>
-    <div class="slide step" data-x="-1600" data-y="1300" data-z="-100" data-rotate-y="270"> slide13 </div>
-    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" > slide14 </div>
-    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" > slide15 </div>
-    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" > slide16 </div>
+    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" >
+       <h2 class="center">List comprehensions vs map & filter function </h2> 
+       <pre><code class="python">
+        string = "Welcome to Python!"
 
-    <div class="slide step" data-x="1600" data-y="-400" data-rel-z="-7000" data-rotate-y="180" > Thanks </div>
+        # NOTE: Select all ascii letter from string 
+        s = []
+        for c in string:
+            if c.isalnum(): s.append(c)
+        print('for loop', s, '\n')
+        print('list comprehensions:', [c for c in string if c.isalpha()], '\n')
+        print('filter function call:', list(filter(lambda c:c.isalpha(), string)), '\n\n\n')
+        
+        # NOTE: Convert all chars to upper case
+        s = []
+        for c in string:
+            s.append( c.upper())
+        
+        print('for loop:', s, '\n')
+        print('list comprehentions:', [c.upper() for c in string], '\n')
+        print('map function call:', list(map(lambda c: c.upper(), string)), '\n\n\n')
+        
+        # NOTE: Combine 2 above action together
+        s = []
+        for c in string:
+            if c.isalpha():
+                s.append(c.upper())
+        
+        print('for loop:', s, '\n')
+        print('list comprehensions:', [c.upper() for c in string if c.isalpha()], '\n')
+        print('map & filter call:', list(map(lambda c:c.upper(), filter(lambda c:c.isalpha(), string))))
+       </code></pre>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" > 
+        <h2 class="center">Special iterator: generator</h2>  
+        <pre><code class="python">
+        def function_generator():
+            print('calling function generator')
+            while True:
+                initial_value = (yield)
+                if isinstance(initial_value, str):
+                    print('----received string value')
+                    yield 'string' # NOTE: yield statement return a value to caller & keep the function state to resume later 
+                elif isinstance(initial_value, int):
+                    print('----received integer value')
+                    yield 'int'
+                else:
+                    yield 'unknown'
+        if __name__ == "__main__":
+            gen = function_generator()
+            next(gen)  # NOTE: to start a generator
+            v = gen.send('liang')
+            print(v)
+            next(gen) # NOTE: must call next to start generator
+            v = gen.send(123)
+            print(v)
+            next(gen)
+            v = gen.send([1, 2, 3])
+            print(v)
+        
+            express_generator = (i for i in range(3)) # NOTE: expression generator
+            print(next(express_generator))
+            print(next(express_generator))
+            print(next(express_generator))
+            print(next(express_generator))
+        </code></pre>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="-400" data-rel-z="-1900" data-rotate-y="270" >
+        <h2 class="center">What is the relation between generator & iterator ???</h2>
+        <br></br>
+        <br></br>
+        <p class="center">Generator is an object which support iteration protocol </p>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="1300" data-z="-100" data-rotate-y="270">
+        <h2 class="center">Performance of for loop, generator, list comprehensions & map function</h2>
+        <pre><code class="python">
+        import time
+        repeats, repeat_list = 5000, range(5000)
+        def timer(func, *args, **kwargs):
+            start = time.clock()
+            for i in repeat_list: result = func(*args, **kwargs)
+            return (time.clock() - start, result)
+        
+        def for_loop():
+            res = []
+            for x in repeat_list: res.append(abs(x))
+            return res
+        
+        def list_comprehension():
+            return [abs(x) for x in repeat_list]
+        
+        def map_call():
+            return list(map(abs, repeat_list))
+        
+        def generator_expression():
+            return list((abs(x) for x in repeat_list))
+        
+        def gen_function():
+            def gen():
+                for x in repeat_list: yield abs(x)
+            return list(gen())
+        
+        if __name__ == "__main__":
+            for test in (for_loop, generator_expression, gen_function, list_comprehension, map_call):
+                elapsed, result = timer(test)
+        print('-' * 33, '\n\n<%-9s>: %.5f => [%s...%s]' % (test.__name__.upper(), elapsed, result[0], result[-1]))
+        </code></pre>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" >
+    <h2 class="center">How we choose these kind of things in practice?</h2> 
+    <br></br>
+    <ol>
+        <li class="substep">Readability:<b>List comprehensions can be incomprehensible some times(nested specilly :), so we can start with normal for loop to let everyone understand the code first </b></li>
+        <br></br>
+        <li class="substep">Consiseness(consisão):<b>Generally, list comprehensions & map function are more simple(less code:) if we are familiar with them</b></li>
+        <br></br>
+        <li class="substep">Performance: <b>As we saw, map & list comprehensions have a better performance than the normal for loop</b></li>
+    </ol>
+        <br></br>
+        <br></br>
+    <p class="center substep"><b>Other iteration topics:<a href="https://docs.python.org/2/library/itertools.html" target="_blank">Python itertools</a> </b></p>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" >
+        <h2 class="center">What else?</h2> 
+
+        <br> </br>
+        <ul>
+            <li>Hacking python builtin objects:
+                <ol>
+                    <li>string: r'', b'', u'', '''''', f''</li>
+                    <li>list/deque</li>
+                    <li>tuple/namedtuple</li>
+                    <li>set</li>
+                    <li>dict/OrderedDict/defaultdict</li>
+                    <li>file</li>
+                    <li>Path</li>
+                </ol>
+            </li>
+        </ul>
+    </div>
+    <div class="slide step" data-x="-1600" data-y="1300" data-rel-z="-1900" data-rotate-y="270" >
+    <h2 class="center">Obrigado</h2> 
+    <br></br>
+    <br></br>
+    <p class="center">Happy hacking Python ^~^ :)  </p>
+    </div>
 
   </div>
 
