@@ -1,18 +1,18 @@
 string = "Welcome to Python!"
 
-# Select all ascii letter from string 
+# Select all ascii letter from string
 s = []
 for c in string:
     if c.isalnum(): s.append(c)
 print('for loop', s, '\n')
 print('list comprehensions:', [c for c in string if c.isalpha()], '\n')
-print('filter function call:', list(filter(lambda c:c.isalpha(), string)), '\n')
+print('filter function call:', list(filter(lambda c: c.isalpha(), string)), '\n')
 
 print('\n\n')
 # Convert all chars to upper case
 s = []
 for c in string:
-    s.append( c.upper())
+    s.append(c.upper())
 
 print('for loop:', s, '\n')
 print('list comprehentions:', [c.upper() for c in string], '\n')
@@ -26,5 +26,4 @@ for c in string:
 
 print('for loop:', s, '\n')
 print('list comprehensions:', [c.upper() for c in string if c.isalpha()], '\n')
-print('map & filter call:', list(map(lambda c:c.upper(), filter(lambda c:c.isalpha(), string))))
-
+print('map & filter call:', list(map(lambda c: c.upper(), filter(lambda c: c.isalpha(), string))))
