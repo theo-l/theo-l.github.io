@@ -1,57 +1,7 @@
-<!DOCTYPE html>
-<html style="height: 100%;">
-
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>Hacking python iteration | by theol.liang@gmail.com</title>
-  <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="description" content="Hacking python iteration & comprehensions "/>
-  <meta name="author" content="Liang Guisheng"/>
-
-  <link rel="stylesheet" href="css/decorator_nature.css" type="text/css">
-  <!-- <link rel="stylesheet" href="css/decorator_pygments.css" type="text/css"> -->
-  <link rel="stylesheet" href="js/extras/highlight/styles/xcode.css" type="text/css">
-  <link rel="stylesheet" href="css/decorator_impress.css" type="text/css">
-  <link rel="stylesheet" href="css/decorator_customized.css" type="text/css">
-  <style>
-
-    .substep.substep-visible {
-      opacity: 1;
-      transition: opacity 1s;
-    }
-
-    .small {font-size: "small"}
-
-    code { font-size: 15px; }
-    .substep { opacity: 0; }
-    li { font-family: monospace; }
-    ol.bottle>li { color: green; }
-    ol.bag>li { color: indigo; }
-    li>ol>li { font-size: 25px; }
-
-  </style>
-</head>
-
-<body class="impress-enabled impress-not-supported" cz-shortcut-listen="true">
-
- <div id="impress">
-
-    <div class="step center section present active" data-scale="5" data-x="-400" data-y="-400" data-z="800">
-      <h1>Hacking python Iteration</h1>
-      <p>Liang Guisheng</p>
-      <p>theol.liang@gmail.com</p>
-    </div>
-
-
 <div class="step slide section past" data-x="3983.098861837907"   data-y="0.0"  data-z="0" data-rotate-z="0.0">Slide 1</div>
-
 <div class="step slide section past" data-x="3788.1521275987507"   data-y="1230.845238583424"  data-z="0" data-rotate-z="18.0">Slide 2</div>
-
 <div class="step slide section past" data-x="3222.3946695023774"   data-y="2341.2067694112566"  data-z="0" data-rotate-z="36.0">Slide 3</div>
-
 <div class="step slide section past" data-x="2341.2067694112566"   data-y="3222.3946695023774"  data-z="0" data-rotate-z="54.0">Slide 4</div>
-
 <div class="step slide section past" data-x="1230.8452385834241"   data-y="3788.1521275987507"  data-z="0" data-rotate-z="72.0">Slide 5</div>
 <div class="step slide section past" data-x="2.4389446359186294e-13"   data-y="3983.098861837907"  data-z="0" data-rotate-z="90.0">Slide 6</div>
 <div class="step slide section past" data-x="-1230.8452385834237"   data-y="3788.152127598751"  data-z="0" data-rotate-z="108.0">Slide 7</div>
@@ -68,17 +18,4 @@
 <div class="step slide section past" data-x="2341.2067694112557"   data-y="-3222.394669502378"  data-z="0" data-rotate-z="306.0">Slide 18</div>
 <div class="step slide section past" data-x="3222.394669502377"   data-y="-2341.2067694112575"  data-z="0" data-rotate-z="324.0">Slide 19</div>
 <div class="step slide section past" data-x="3788.1521275987507"   data-y="-1230.8452385834248"  data-z="0" data-rotate-z="342.0">Slide 20</div>
-
-
-
-  </div>
-
-  <script src="js/extras/highlight/highlight.pack.js"></script>
-  <script src="js/class_impress.js"></script>
-  <script src="js/plugins/substep/substep.js"></script>
-  <script>
-    impress().init();
-    hljs.initHighlightingOnLoad();
-  </script>
-</body>
-</html>
+<div class="step slide section past" data-x="3983.098861837907"   data-y="-9.755778543674518e-13"  data-z="0" data-rotate-z="360.0">Slide 21</div>
