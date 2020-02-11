@@ -44,12 +44,134 @@
     </div>
 
 
-<div class="step slide section past" data-x="3983.098861837907"   data-y="0.0"  data-z="0" data-rotate-y="90.0" data-rotate-x="0.0" data-rotate-order="yx">String in python</div>
-<div class="step slide section past" data-x="3788.1521275987507"   data-y="1230.845238583424" data-rotate-y="90.0"  data-z="0" data-rotate-x="-18.0" data-rotate-order="yx">Slide 2</div>
-<div class="step slide section past" data-x="3222.3946695023774"   data-y="2341.2067694112566"  data-rotate-y="90.0" data-z="0" data-rotate-x="-36.0"  data-rotate-order="yx">Slide 3</div>
-<div class="step slide section past" data-x="2341.2067694112566"   data-y="3222.3946695023774"  data-rotate-y="90.0"  data-z="0" data-rotate-x="-54.0" data-rotate-order="yx">Slide 4</div>
-<div class="step slide section past" data-x="1230.8452385834241"   data-y="3788.1521275987507"  data-z="0" data-rotate-y="90.0" data-rotate-x="-72.0" data-rotate-order="yx">Slide 5</div>
-<div class="step slide section past" data-x="0"   data-y="3983.098861837907"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-90.0" data-rotate-order="yx">Slide 6</div>
+<div class="step slide section past" data-x="3983.098861837907"   data-y="0.0"  data-z="0" data-rotate-y="90.0" data-rotate-x="0.0" data-rotate-order="yx">
+    <h2 class="center">5 String types in python</h2>
+    <pre> <code class="python">
+    if __name__ == '__main__':
+        print( 'spa"m') # simple single quote string
+        print( "spa'm") # simple double quote string 
+        print( 
+            '''
+                spam
+            '''
+            )
+        print( 
+            """
+                spam 
+            """
+        )
+        print( 'I am an escaped\nstring') # escaped string 
+        print( r'I am an raw\nstring') # raw string 
+        print( b'I am a byte string') # byte string 
+        print( u'梁桂生') # unicode string 
+
+    </code></pre>
+</div>
+
+<div class="step slide section past" data-x="3788.1521275987507"   data-y="1230.845238583424" data-rotate-y="90.0"  data-z="0" data-rotate-x="-18.0" data-rotate-order="yx">
+    <h2 class="center">3 String formats in python</h2>
+    <pre><code class="python">
+    
+    if __name__ == '__main__':
+        # %[(name)][flags][width][.precision]typecode
+        print('old style format:', 'name=%s, age=%d' % ('dave', 30)) # format with index
+        print('old style format:', 'name=%(name)s, age=%(age)d' % {'name': 'dave', 'age': 30}) # format with name
+
+        # [[fill]align][sign][#][0][width][.precision][typecode]
+        print('format style format:', 'name={}, age={}'.format('dave', 30)) # format with index 
+        print('format style format:', 'name={1}, age={0}'.format(30,
+                                                                 'dave'))  # NOTE: use given index instead of default index
+        print('format style format:', 'name={name}, age={age}'.format(name='dave', age=30))  # NOTE: use given name
+        print('format style format:', 'name={name}, age={age}'.format(**{'name': 'dave', 'age': 30})) # NOTE: use dict unpack 
+        print('format style format:', 'name={0[name]}, age={0[age]}'.format({'name': 'dave', 'age': 30})) # NOTE: access attribute
+        print('format style format:', 'name={data[name]}, age={data[age]}'.format(data={'name': 'dave', 'age': 30})) # NOTE: access attribute 
+
+        print('f-string style format:', f'name={"dave"}, age={30}') # F-string
+    </code></pre>
+</div>
+
+<div class="step slide section past" data-x="3222.3946695023774"   data-y="2341.2067694112566"  data-rotate-y="90.0" data-z="0" data-rotate-x="-36.0"  data-rotate-order="yx">
+    <h2 class="center">Some useful string methods</h2>
+    <pre><code class="python">
+    if __name__ == '__main__':
+        a, b = 'Hello', 'World'
+        print(a + b, '*' * 40) # string math operation
+        print(a[0], a[-1], a[-2]) # string substring 
+        print(a[:], a[1:], a[:-1])
+        print(a[::2], a[::-1])
+
+        a.replace('H', 'h') # change string inline
+        print(a)
+
+        # boolean check 
+        print(a.isupper(), a.istitle(), a.islower(), a.isnumeric(), a.isdict(), a.isdecimal(), a.isalpha(), a.isalnum(), a.endswith('a'), a.startswith('o'))
+
+        # string transform
+        print(a.upper(), a.lower(), a.capitalize(), a.title())
+
+        # string split, partition, join 
+        print('a:b:c'.split(), 'a:b:c'.partition(), 'a:b:c'.rpatition(), ';'.join(['name', 'age']))
+
+        # find location of sub string
+        print(a.find('e'), a.find('lo'))
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="2341.2067694112566"   data-y="3222.3946695023774"  data-rotate-y="90.0"  data-z="0" data-rotate-x="-54.0" data-rotate-order="yx">
+    <h2 class="center">Some good practice of list</h2>
+    <pre><code class="python">
+    if __name__ == '__main__':
+        print([1, 2, 3] + [4, 5, 6, 7])
+        print([1, 2, 3] * 2)
+        demo_list = [1, 'a', [2, 3, 4], {5, 6, 7}, {'name': 'dave', 'age': 30}]
+        # Insert
+        demo_list.insert(1, 'bb')
+        print(demo_list)
+        demo_list.append(100)
+        print(demo_list)
+        demo_list.extend([9, 8, 7, 6, 5])
+        print(demo_list)
+        # Update
+        demo_list[0] = 'update'
+        print(demo_list)
+        # Index and Query
+        a, *b, c = demo_list
+        print(a, b, c)
+        print(demo_list[:], demo_list[1:3], demo_list[::3])
+        print(demo_list.index('a'))
+        # Remove
+        demo_list.remove('a')
+        print(demo_list)
+        demo_list.pop()
+        print(demo_list)
+        demo_list.pop(2)
+        print(demo_list)
+        demo_list.clear()
+        print(demo_list)
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="1230.8452385834241"   data-y="3788.1521275987507"  data-z="0" data-rotate-y="90.0" data-rotate-x="-72.0" data-rotate-order="yx">
+    <h2 class="center">Good practice with deque</h2>
+    <pre><code class="python">
+    if __name__ == '__main__':
+        from collections import deque
+        a = deque('hello')
+        print(a)
+        a.appendleft('A')
+        print(a)
+        print(a.popleft())
+        a.rotate(1)
+        print(a)
+        a.rotate(-1)
+        print(a)
+
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="0"   data-y="3983.098861837907"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-90.0" data-rotate-order="yx">
+    <h2 class="center">Good practice with tuple & namedtuple</h2>
+    <pre><code class="python">
+    
+    </code></pre>
+</div>
 <div class="step slide section past" data-x="-1230.8452385834237"   data-y="3788.152127598751"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-108.0" data-rotate-order="yx">Slide 7</div>
 <div class="step slide section past" data-x="-2341.206769411256"   data-y="3222.3946695023774"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-126.0" data-rotate-order="yx">Slide 8</div>
 <div class="step slide section past" data-x="-3222.394669502377"   data-y="2341.206769411257"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-144.0" data-rotate-order="yx">Slide 9</div>
