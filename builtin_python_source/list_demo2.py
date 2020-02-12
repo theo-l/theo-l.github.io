@@ -30,9 +30,15 @@ def list_demo():
     demo_list.pop(2)
     print(demo_list)
 
+
+    a, *b, c = demo_list
+    print('unpacked list:', a, b, c) # list unpack 
+
+    packed_list = [*[1,2,3], *[2,3,4],*[5,6,7]]
+    print('packed list:', packed_list)
+
     demo_list.clear()
     print(demo_list)
-
 
 def deque_demo():
     from collections import deque

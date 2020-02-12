@@ -91,7 +91,7 @@
 </div>
 
 <div class="step slide section past" data-x="3222.3946695023774"   data-y="2341.2067694112566"  data-rotate-y="90.0" data-z="0" data-rotate-x="-36.0"  data-rotate-order="yx">
-    <h2 class="center">Some useful string methods</h2>
+    <h2 class="center">Have fun with string</h2>
     <pre><code class="python">
     if __name__ == '__main__':
         a, b = 'Hello', 'World'
@@ -116,8 +116,9 @@
         print(a.find('e'), a.find('lo'))
     </code></pre>
 </div>
+
 <div class="step slide section past" data-x="2341.2067694112566"   data-y="3222.3946695023774"  data-rotate-y="90.0"  data-z="0" data-rotate-x="-54.0" data-rotate-order="yx">
-    <h2 class="center">Some good practice of list</h2>
+    <h2 class="center">Have fun with list</h2>
     <pre><code class="python">
     if __name__ == '__main__':
         print([1, 2, 3] + [4, 5, 6, 7])
@@ -136,6 +137,7 @@
         # Index and Query
         a, *b, c = demo_list
         print(a, b, c)
+        print([*[1,2,3], *['a', 'b', 'c']])
         print(demo_list[:], demo_list[1:3], demo_list[::3])
         print(demo_list.index('a'))
         # Remove
@@ -149,8 +151,9 @@
         print(demo_list)
     </code></pre>
 </div>
+
 <div class="step slide section past" data-x="1230.8452385834241"   data-y="3788.1521275987507"  data-z="0" data-rotate-y="90.0" data-rotate-x="-72.0" data-rotate-order="yx">
-    <h2 class="center">Good practice with deque</h2>
+    <h2 class="center">Have fun with deque</h2>
     <pre><code class="python">
     if __name__ == '__main__':
         from collections import deque
@@ -166,19 +169,207 @@
 
     </code></pre>
 </div>
+
 <div class="step slide section past" data-x="0"   data-y="3983.098861837907"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-90.0" data-rotate-order="yx">
-    <h2 class="center">Good practice with tuple & namedtuple</h2>
+    <h2 class="center">Have fun with tuple & namedtuple</h2>
     <pre><code class="python">
-    
+    if __name__ == '__main__':
+        demo_tuple = (1,2,3,4,5,6,7,8,9,1,2)
+        print(demo_tuple[:], demo_tuple[::2, demo_tuple[::-2]])
+
+        print(demo_tuple.count(1), demo_tuple.count(8))
+        a, *b, c  = demo_tuple # unpack tuple
+        print(a,b,c)
+
+        # namedtuple
+        from collections import namedtuple
+        Truckpader = namedtuple('Truckpader', 'name, gender')
+        Truckpader2 = namedtuple('Truckpader2', ['name', 'gender'])
+        liang = Truckpader('liang', 'M')
+        print(liang, liang.name, liang.gender)
+
+        liang  = Truckpader2(name='liang', gender='M')
+        print(liang, liang.name, liang.gender)
+        name, gender = liang 
+        print(f'Name={name}, Gender={gender}')
     </code></pre>
 </div>
-<div class="step slide section past" data-x="-1230.8452385834237"   data-y="3788.152127598751"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-108.0" data-rotate-order="yx">Slide 7</div>
-<div class="step slide section past" data-x="-2341.206769411256"   data-y="3222.3946695023774"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-126.0" data-rotate-order="yx">Slide 8</div>
-<div class="step slide section past" data-x="-3222.394669502377"   data-y="2341.206769411257"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-144.0" data-rotate-order="yx">Slide 9</div>
-<div class="step slide section past" data-x="-3788.1521275987507"   data-y="1230.8452385834244"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-162.0" data-rotate-order="yx">Slide 10</div>
-<div class="step slide section past" data-x="-3983.098861837907"   data-y="0.0"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-180.0" data-rotate-order="yx">Slide 11</div>
-<div class="step slide section past" data-x="-3788.152127598751"   data-y="-1230.8452385834235"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-198.0" data-rotate-order="yx">Slide 12</div>
-<div class="step slide section past" data-x="-3222.394669502378"   data-y="-2341.206769411256"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-216.0" data-rotate-order="yx">Slide 13</div>
+<div class="step slide section past" data-x="-1230.8452385834237"   data-y="3788.152127598751"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-108.0" data-rotate-order="yx">
+    <h2 class="center">Have fun with set</h2>
+    <pre><code class="python">
+    if __name__ == '__main__':
+        sa, sb = {1, 2, 2, 3, 4, 5}, {4, 5, 6, 7, 8, 9, 9}
+        print(sa, sb)
+        sa.add(10)
+        print(sa)
+        print('a intersection b:', sa.intersection(sb), sa & sb)  # and operation on set
+        print('a union b:', sa.union(sb), sa | sb)  # or operation on set
+        print('a difference b:', sa.difference(sb), sa - sb, )
+        print('b difference a:', sb.difference(sa), sb - sa)
+        print('a symmetric_difference b:', sa.symmetric_difference(sb), sa ^ sb)
+        sa2 = {o for o in sa}  # make a copy of sa
+        sa2.update(sb)
+        print('set update:', sa2)
+        print(sa2.issuperset(sb), sb.issubset(sa2))
+        sa3 = {o for o in sa}
+        sa3.symmetric_difference_update(sb)
+        print('symmetric_difference_update:', sa3)
+        sa4 = {o for o in sa}
+        sa4.intersection_update(sb)
+        print('intersection update:', sa4)
+        sa.discard(5)
+        print('after discard:', sa)
+        sa.remove(2)
+        print('after remove:', sa)
+        a, *b, c = sa
+        print(a, b, c) # unpack set
+        a, *b = sa
+        print(a, b)
+        a, *b, c, d = sa
+        print(a, b, c, d)
+    </code></pre>
+</div>
+
+<div class="step slide section past" data-x="-2341.206769411256"   data-y="3222.3946695023774"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-126.0" data-rotate-order="yx">
+    <h2>Have fun with dict and OrderedDict</h2>
+    <pre><code class="python">
+    if __name__ == "__main__":
+        da, db = {'name': 'liang'}, {'gender': 'm'}
+        print(da, db)
+        dc = {**da, **db}  # pack
+        print('packed dict:', dc)
+        da.update(db)
+        print('in place updated dict:', da)
+        # da.pop('non_exist') # NOTE: error
+        da.pop('non_exist', 'None')  # NOTE: Ok
+        da.pop('gender', None)
+        da.setdefault('professions', [])
+        print(da)
+        da['professions'].append('python')
+        print(da)
+        da.setdefault('professions', [])  # NOTE: no effect
+        print(da)
+        da.clear()
+        print(da)
+    
+        from collections import OrderedDict
+        da = {'banana': 3, 'apple': 4, 'pear': 1, 'orange': 2, 'apple': 5}
+        value_sorted_dict = OrderedDict(sorted(da.items(), key=lambda o: o[-1]))
+        print(value_sorted_dict)
+        key_sorted_dict = OrderedDict(sorted(da.items(), key=lambda o: o[0]))
+        print(key_sorted_dict)
+        print('compare OrderedDict:', value_sorted_dict == key_sorted_dict)
+        print('simple dict:', dict(value_sorted_dict) == dict(key_sorted_dict))
+        print('{banana} bananas, {apple} apples, {pear} pears, {orange} oranges'.format(**da))
+    
+    </code></pre>
+ </div>
+<div class="step slide section past" data-x="-3222.394669502377"   data-y="2341.206769411257"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-144.0" data-rotate-order="yx">
+    <h2 class="center">Have fun with file </h2>
+    <pre><code class="python">
+    def file_demo():
+    
+        print('\n\nRead file by readlines()\n')
+        with open(__file__, 'r') as fp:
+            lines = fp.readlines()
+            print('type of readlines:', type(lines), '\n')
+            for line in lines:
+                print(line, end='')
+    
+        print('\n\nRead file by readline()\n')
+        with open(__file__, 'r') as fp:
+            line = fp.readline()
+            while line:
+                print(line, end='')
+                line = fp.readline()
+    
+        print('\n\nRead file directly by the file object\n')
+        with open(__file__, 'r') as fp:
+            print('type of fp:', type(fp))
+            for line in fp:
+                print(line, end='')
+    
+    
+    if __name__ == "__main__":
+        file_demo()
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="-3788.1521275987507"   data-y="1230.8452385834244"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-162.0" data-rotate-order="yx">
+    <h2 class="center">Have fun with pathlib</h2>
+    <pre><code class="python">
+    def path_demo():
+        from pathlib import Path
+    
+        parent_path = Path('./..')
+        print('dirs in parent dir:', '\n'.join([str(x) for x in parent_path.iterdir() if x.is_dir()]))
+    
+        print('\n')
+    
+        current_path = Path.cwd()
+        print('all python files', '\n'.join([str(x) for x in current_path.glob('**/*.py')]))
+        demo_py = current_path/'dd.py'
+        demo_py.touch()
+        print('all python files', '\n'.join([str(x) for x in current_path.glob('**/*.py')]))
+    
+        home = Path.home()
+        one_path = home / 'projects' / 'github' / 'theo-l.liang.io'
+    
+        print('path name:', one_path.name)
+        print('path:', one_path)
+        print('path root:', one_path.root)
+        print('path parent:', one_path.parent)
+        print('path parents:', list(one_path.parents))
+        print('path components:', one_path.parts)
+    
+    
+    if __name__ == "__main__":
+        path_demo()
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="-3983.098861837907"   data-y="0.0"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-180.0" data-rotate-order="yx">
+    <h2 class="center">Sequence pack & unpack</h2>
+    <pre><code class="python">
+    def pack_and_unpack_demo():
+        #unpack
+        for sequence in ['hello world', list(range(10)), tuple(range(10, 20))]:
+            a, b, *c = sequence
+            print(a, b, c)
+            print(sequence[0], sequence[1], list(sequence[2:]))
+            print()
+            *a, b, c = sequence
+            print(a, b, c)
+            print(list(sequence[:-2]), sequence[-2], sequence[-1])
+            print()
+            a, *b, c = sequence
+            print(a, b, c)
+            print(sequence[0], list(sequence[1:-1]), sequence[-1])
+            print()
+        set_data = set(range(30, 40))
+        a, b, *c = set_data
+        print(a, b, c)
+        *a, b, c = set_data
+        print(a, b, c)
+        a, *b, c = set_data
+        print(a, b, c)
+        #pack 
+        print([*[1, 2, 3, 4], *(15, 16, 17, 18), *{21, 22, 23}])
+        print({**{'name':'liang'}, **{'gender':'m'}})
+    
+    if __name__ == "__main__":
+        pack_and_unpack_demo()
+    </code></pre>
+</div>
+<div class="step slide section past" data-x="-3788.152127598751"   data-y="-1230.8452385834235"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-198.0" data-rotate-order="yx">
+    <h2 class="center">Thanks</h2>
+    <br></br>
+    <h3 class="center">Happy hacking with python</h3>
+    <br></br>
+    <br></br>
+    <p class="center">Liang guisheng</p>
+    <p class="center">theol.liang@gmail.com</p>
+</div>
+<div class="step slide section past" data-x="-3222.394669502378"   data-y="-2341.206769411256"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-216.0" data-rotate-order="yx">
+</div>
 <div class="step slide section past" data-x="-2341.206769411257"   data-y="-3222.394669502377"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-234.0" data-rotate-order="yx">Slide 14</div>
 <div class="step slide section past" data-x="-1230.8452385834246"   data-y="-3788.1521275987507"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-252.0" data-rotate-order="yx">Slide 15</div>
 <div class="step slide section past" data-x="0"   data-y="-3983.098861837907"  data-z="0"  data-rotate-y="90.0" data-rotate-x="-270.0" data-rotate-order="yx">Slide 16</div>
